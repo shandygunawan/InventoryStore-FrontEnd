@@ -2,16 +2,20 @@
   <div class="pa-3">
     <h1 class="text-center">Input Barang Masuk</h1>
     <v-container>
-      <v-form v-model="isFormValid" method="post" @submit.prevent="submitForm">
+      <v-form 
+        @submit.prevent="submitForm"
+        ref="form"
+      >
         <!-- Datetime -->
         <v-row class="mt-4">
           <v-col class="col-12 col-md-6">
-            <v-dialog
-              ref="dialog"
+            <v-menu
               v-model="incoming_datepicker"
-              :return-value.sync="date"
-              persistent
-              width="290px"
+              :close-on-content-click="true"
+              :nudge-right="40"
+              transition="scale-transition"
+              offset-y
+              min-width="auto"
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
@@ -23,36 +27,23 @@
                   v-on="on"
                 ></v-text-field>
               </template>
-
               <v-date-picker
                 v-model="form.incoming_date"
-                scrollable
-              >
-                <v-spacer></v-spacer>
-                <v-btn
-                  text
-                  color="primary"
-                  @click="incoming_datepicker = false"
-                >
-                  Cancel
-                </v-btn>
-                <v-btn
-                  text
-                  color="primary"
-                  @click="$refs.dialog.save(date)"
-                >
-                  OK
-                </v-btn>
-              </v-date-picker>
-            </v-dialog>
+                @input="incoming_date = false"
+              ></v-date-picker>
+            </v-menu>
           </v-col>
           <v-col class="col-12 col-md-6">
-            <v-dialog
-              ref="dialog"
+            <v-menu
+              ref="menu"
               v-model="incoming_timepicker"
-              :return-value.sync="time"
-              persistent
-              width="290px"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              :return-value="form.incoming_time"
+              transition="scale-transition"
+              offset-y
+              max-width="290px"
+              min-width="290px"
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
@@ -69,24 +60,9 @@
                 v-model="form.incoming_time"
                 full-width
                 format="24hr"
-              >
-                <v-spacer></v-spacer>
-                <v-btn
-                  text
-                  color="primary"
-                  @click="incoming_timepicker = false"
-                >
-                  Cancel
-                </v-btn>
-                <v-btn
-                  text
-                  color="primary"
-                  @click="$refs.dialog.save(time)"
-                >
-                  OK
-                </v-btn>
-              </v-time-picker>
-            </v-dialog>
+                @click:minute="$refs.menu.save(form.incoming_time)"
+              ></v-time-picker>
+            </v-menu>
           </v-col>
         </v-row>
 
@@ -99,6 +75,7 @@
               item-text="text"
               item-value="value"
               label="Metode Pembayaran"
+              required
             >
             </v-select>
           </v-col>
@@ -117,12 +94,13 @@
         <!-- Due Date & Supplier -->
         <v-row>  
           <v-col class="col-12 col-md-6">
-            <v-dialog
-              ref="dialog"
+            <v-menu
               v-model="duedate_datepicker"
-              :return-value.sync="date"
-              persistent
-              width="290px"
+              :close-on-content-click="true"
+              :nudge-right="40"
+              transition="scale-transition"
+              offset-y
+              min-width="auto"
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
@@ -134,28 +112,12 @@
                   v-on="on"
                 ></v-text-field>
               </template>
-
               <v-date-picker
                 v-model="form.duedate_date"
-                scrollable
-              >
-                <v-spacer></v-spacer>
-                <v-btn
-                  text
-                  color="primary"
-                  @click="duedate_datepicker = false"
-                >
-                  Cancel
-                </v-btn>
-                <v-btn
-                  text
-                  color="primary"
-                  @click="$refs.dialog.save(date)"
-                >
-                  OK
-                </v-btn>
-              </v-date-picker>
-            </v-dialog>
+                @input="duedate_datepicker = false"
+              ></v-date-picker>
+
+            </v-menu>
           </v-col>
           <v-col class="col-12 col-md-6">
             <v-autocomplete
@@ -183,7 +145,7 @@
             <thead>
               <tr>
                 <th class="text-left">Nama</th>
-                <th class="text-left">Jumlah</th>                
+                <th class="text-left">Banyak</th>                
                 <th class="text-left">Harga Satuan</th>
                 <th class="text-left">Harga Total</th>
                 <th class="text-left">Hapus</th>
@@ -246,14 +208,27 @@
           </v-btn>
         </div>
       </v-form>
+      <v-snackbar
+        v-model="snackbar"
+      >
+        {{snackbar_text}}
+        <template v-slot:action="{ attrs }">
+          <v-btn
+            color="pink"
+            text
+            v-bind="attrs"
+            @click="snackbar = false"
+          >
+            Close
+          </v-btn>
+        </template>
+      </v-snackbar>
     </v-container>
   </div>
 </template>
 
 <script>
 import axios from "axios";
-axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
-axios.defaults.xsrfCookieName = "XCSRF-TOKEN";
 
 export default {
   data() {
@@ -261,6 +236,8 @@ export default {
       isFormValid: false,
       incoming_datepicker: false,
       incoming_timepicker: false,
+      snackbar: false,
+      snackbar_text: "",
       payment_method_items: [
         { text: "Cash", value: "cash" },
         { text: "Transfer", value: "transfer" },
@@ -272,6 +249,8 @@ export default {
         { text: "Lunas", value: "finished" }
       ],
       duedate_datepicker: false,
+      supplier_data: null,
+      products_data: null,
       form: {
         incoming_date: new Date().toISOString().substr(0, 10),
         incoming_time: new Date().toLocaleTimeString('en-US', { hour12: false, 
@@ -308,15 +287,66 @@ export default {
     removeProductsField(index) {
       this.form.products.splice(index, 1);
     },
+    checkFormValid() {
+      if (this.form.incoming_date === null) {
+        return { valid: false, message: "Tanggal masuk harus diisi" };
+      }
+      if (this.form.incoming_time === null) {
+        return { valid: false, message: "Waktu masuk harus diisi" };
+      }
+      if (this.form.payment_method === null) {
+        return { valid: false, message: "Metode pembayaran harus diisi" };
+      }
+      if (this.form.payment_status === null) {
+        return { valid: false, message: "Status pembayaran harus diisi" };
+      }
+      if (this.form.duedate_date === null) {
+        return { valid: false, message: "Tanggal jatuh tempo harus diisi" };
+      }
+      if (this.form.supplier === null) {
+        return { valid: false, message: "Supplier harus diisi" };
+      }
+      if (this.form.products.length === 0) {
+        return { valid: false, message: "Harus ada min. 1 produk" };
+      }
+      if (this.form.products.length > 0) {
+        for (var i = 0; i < this.form.products.length; i++) {
+          if (this.form.products[i]['id'] === null) {
+            return { valid: false, message: "Nama Produk harus diisi" };
+          }
+          if (this.form.products[i]['stock'] < 1) {
+            return { valid: false, message: "Banyak Produk harus lebih dari 0" };
+          }
+          if (this.form.products[i]['price'] < 1) {
+            return { valid: false, message: "Harga Produk harus lebih dari 0" };
+          }
+        }
+      }
+
+      return { valid: true, message: "Valid" };
+    },
     submitForm() {
-      console.log(this.form);
+
+      var isValidObj = this.checkFormValid();
+
+      if(isValidObj['valid'] === false){
+        this.snackbar_text = isValidObj['message'];
+        this.snackbar = true;
+        return;
+      }
+
+      console.log(this.$refs.form.validate());
+
       axios.post("http://localhost:8000/igog/incoming_create/", this.form, {
         headers: {
           'Content-Type': 'application/json'
         }
       })
         .then(res => {
-          console.log(res);
+          console.log(res)
+          this.snackbar_text = "Input berhasil!"
+          this.snackbar = true;
+          this.$refs.form.reset();
         })
     }
   },
