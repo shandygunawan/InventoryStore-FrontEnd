@@ -1,0 +1,64 @@
+<template>
+  <nav>
+    <v-app-bar app>
+      <v-toolbar-title>
+        <span class="font-weight-light">Inventory</span>
+        <span>Store</span>
+      </v-toolbar-title>
+      
+      <router-link to="/dashboard">
+        <v-btn small depressed class="ml-5 mr-2">Dashboard</v-btn>
+      </router-link>
+      
+      <navbar-dropdown
+        list_name="List"
+        :list_items="list_items"
+        transition="slide-y-transition"
+      />
+
+      <navbar-dropdown
+        list_name="Input"
+        :list_items="input_items"
+        transition="slide-x-transition"
+      />
+
+      <v-spacer></v-spacer>
+
+      <v-btn text>
+        <span>Masuk</span>
+        <v-icon right>mdi-login</v-icon>
+      </v-btn>
+    </v-app-bar>
+  </nav>
+</template>
+
+<script>
+import NavbarDropdown from './NavbarDropdown.vue';
+
+export default {
+  components: { NavbarDropdown },
+  data() {
+    return {
+      list_items: [
+        { title: "Supplier", route: "/suppliers" },
+        { title: "Pembeli" , route: "/buyers"},
+        { title: "Produk", route: "/products" }
+      ],
+      input_items: [
+        { title: "Barang Masuk", route: "/input/incoming" },
+        { title: "Barang Keluar", route: "/input/outgoing" },
+        { title: "Supplier", route: "/input/suppliers" },
+        { title: "Pembeli" , route: "/input/buyers"},
+        { title: "Produk", route: "/input/products" }
+      ]
+    }
+  }
+}
+</script>
+
+<style scoped>
+a {
+  text-decoration: none;
+}
+
+</style>
