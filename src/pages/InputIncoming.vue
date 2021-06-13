@@ -204,7 +204,7 @@
 
         <div class="d-flex justify-center mt-15">
           <v-btn color="blue white--text" class="justify-center" type="submit">
-            Submit
+            Buat
           </v-btn>
         </div>
       </v-form>
@@ -339,7 +339,7 @@ export default {
 
       axios.post("http://localhost:8000/igog/incoming_create/", this.form, {
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         }
       })
         .then(res => {

@@ -28,7 +28,12 @@ const routes = [
     path: '/input/incoming',
     name: 'Input Barang Masuk',
     component: () => import('../pages/InputIncoming.vue')
-  }
+  },
+  {
+    path: '/input/suppliers',
+    name: 'Input Supplier',
+    component: () => import('../pages/InputSuppliers.vue')
+  },
 ]
 
 const router = new VueRouter({
