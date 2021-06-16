@@ -266,7 +266,7 @@ export default {
   },
   methods: {
     getSuppliersIncoming() {
-      axios.get('http://localhost:8000/entities/suppliers_incoming/')
+      axios.get('http://localhost:8000/entities/suppliers/igog')
         .then((response) => {
           this.supplier_data = response.data;
         })
