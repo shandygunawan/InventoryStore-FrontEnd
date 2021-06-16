@@ -24,10 +24,12 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn text>
-        <span>Masuk</span>
-        <v-icon right>mdi-login</v-icon>
-      </v-btn>
+      <router-link to="/login">
+        <v-btn text>
+          <span>Masuk</span>
+          <v-icon right>mdi-login</v-icon>
+        </v-btn>
+      </router-link>
     </v-app-bar>
   </nav>
 </template>

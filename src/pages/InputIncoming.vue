@@ -86,6 +86,7 @@
               item-text="text"
               item-value="value"
               label="Status Pembayaran"
+              required
             >
             </v-select>
           </v-col>
@@ -126,6 +127,7 @@
               item-text="name"
               item-value="id"
               label="Supplier"
+              :rules="[rules.required]"
             >
             </v-autocomplete>
           </v-col>
@@ -163,6 +165,7 @@
                     item-text="name"
                     item-value="id"
                     label="Produk"
+                    :rules="[rules.required]"
                   >
                   </v-autocomplete>
                 </td>
@@ -174,6 +177,7 @@
                     dense
                     type="number"
                     value="1"
+                    :rules="[rules.required, rules.min_value]"
                   />
                 </td>
                 <td>
@@ -184,6 +188,7 @@
                     dense
                     type="number"
                     value="1000"
+                    :rules="[rules.required, rules.min_value]"
                   />
                 </td>
                 <td>
@@ -262,6 +267,10 @@ export default {
         supplier: null,
         products: [],
       },
+      rules: {
+        required: value => !!value || 'Wajib diisi',
+        min_value: v => v > 0 || 'Min. 1',
+      }
     }
   },
   methods: {
@@ -288,10 +297,10 @@ export default {
       this.form.products.splice(index, 1);
     },
     checkFormValid() {
-      if (this.form.incoming_date === null) {
+      if (this.form.incoming_date === null || this.form.incoming_date === "") {
         return { valid: false, message: "Tanggal masuk harus diisi" };
       }
-      if (this.form.incoming_time === null) {
+      if (this.form.incoming_time === null || this.form.incoming_time === "") {
         return { valid: false, message: "Waktu masuk harus diisi" };
       }
       if (this.form.payment_method === null) {
@@ -300,10 +309,10 @@ export default {
       if (this.form.payment_status === null) {
         return { valid: false, message: "Status pembayaran harus diisi" };
       }
-      if (this.form.duedate_date === null) {
+      if (this.form.duedate_date === null || this.form.duedate_date === "") {
         return { valid: false, message: "Tanggal jatuh tempo harus diisi" };
       }
-      if (this.form.supplier === null) {
+      if (this.form.supplier === null || this.form.supplier === "") {
         return { valid: false, message: "Supplier harus diisi" };
       }
       if (this.form.products.length === 0) {
@@ -311,7 +320,7 @@ export default {
       }
       if (this.form.products.length > 0) {
         for (var i = 0; i < this.form.products.length; i++) {
-          if (this.form.products[i]['id'] === null) {
+          if (this.form.products[i]['id'] === null || this.form.products[i]['id'] === "") {
             return { valid: false, message: "Nama Produk harus diisi" };
           }
           if (this.form.products[i]['stock'] < 1) {

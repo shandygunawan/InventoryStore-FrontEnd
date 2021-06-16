@@ -5,6 +5,11 @@ Vue.use(VueRouter)
 
 const routes = [
   {
+    path: '/login',
+    name: 'login',
+    component: () => import('../pages/AuthLogin.vue')
+  },
+  {
     path: '/dashboard',
     name: 'dashboard',
     component: () => import('../pages/Dashboard.vue')
