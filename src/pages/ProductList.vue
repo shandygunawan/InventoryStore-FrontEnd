@@ -14,7 +14,11 @@
     >
       <template v-slot:item="props">
         <tr>
-          <td>{{ props.item.name }}</td>
+          <td>
+            <router-link :to="{ name: 'product-detail', params: { product_id: props.item.id } }">
+              {{ props.item.name }}
+            </router-link>
+          </td>
           <td>{{ props.item.stock }}</td>
           <td>{{ props.item.price }}</td>
         </tr>

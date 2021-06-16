@@ -6,37 +6,37 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/dashboard',
-    name: 'Dashboard',
+    name: 'dashboard',
     component: () => import('../pages/Dashboard.vue')
   },
   {
     path: '/suppliers',
-    name: 'List Supplier',
+    name: 'supplier-list',
     component: () => import('../pages/SupplierList.vue')
   },
   {
     path: '/buyers',
-    name: 'List Pembeli',
+    name: 'buyer-list',
     component: () => import('../pages/BuyerList.vue')
   },
   {
     path: '/products',
-    name: 'List Produk',
+    name: 'product-list',
     component: () => import('../pages/ProductList.vue')
   },
   {
     path: '/products/:product_id',
-    name: "Detail Produk",
+    name: "product-detail",
     component: () => import('../pages/ProductDetail.vue')
   },
   {
     path: '/input/incoming',
-    name: 'Input Barang Masuk',
+    name: 'incoming-input',
     component: () => import('../pages/InputIncoming.vue')
   },
   {
     path: '/input/suppliers',
-    name: 'Input Supplier',
+    name: 'supplier-input',
     component: () => import('../pages/InputSuppliers.vue')
   },
 ]
