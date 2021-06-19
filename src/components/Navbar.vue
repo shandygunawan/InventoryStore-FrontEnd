@@ -42,6 +42,7 @@ export default {
   data() {
     return {
       list_items: [
+        { title: "Barang Masuk", route: "/incomings" },
         { title: "Supplier", route: "/suppliers" },
         { title: "Pembeli" , route: "/buyers"},
         { title: "Produk", route: "/products" }
@@ -49,9 +50,9 @@ export default {
       input_items: [
         { title: "Barang Masuk", route: "/input/incoming" },
         { title: "Barang Keluar", route: "/input/outgoing" },
-        { title: "Supplier", route: "/input/suppliers" },
-        { title: "Pembeli" , route: "/input/buyers"},
-        { title: "Produk", route: "/input/products" }
+        { title: "Supplier", route: "/input/supplier" },
+        { title: "Pembeli" , route: "/input/buyer"},
+        { title: "Produk", route: "/input/product" }
       ]
     }
   }

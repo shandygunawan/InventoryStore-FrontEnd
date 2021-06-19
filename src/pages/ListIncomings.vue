@@ -1,11 +1,11 @@
 <template>
   <div class="pa-3">
-    <h2>List Produk</h2>
+    <h2>List Barang Masuk</h2>
     <v-text-field class="mt-3" placeholder="Cari" v-model="search" prepend-icon="mdi-magnify"></v-text-field>
     <v-data-table
       :headers="headers"
-      :items="products"
-      :item-key="products.id"
+      :items="suppliers"
+      :item-key="suppliers.id"
       :items-per-page="10"
       :search="search"
       must-sort="true"
@@ -14,13 +14,7 @@
     >
       <template v-slot:item="props">
         <tr>
-          <td>
-            <router-link :to="{ name: 'product-detail', params: { product_id: props.item.id } }">
-              {{ props.item.name }}
-            </router-link>
-          </td>
-          <td>{{ props.item.stock }}</td>
-          <td>{{ props.item.price }}</td>
+          <td>{{ props.item.name }}</td>
         </tr>
      </template>
     </v-data-table>
@@ -28,30 +22,31 @@
 </template>
 
 <script>
-const axios = require("axios");
+import axios from "axios";
 
 export default {
   data() {
     return {
-      products: [],
+      suppliers: [],
       headers: [
         { text: "Nama", value: "name", sortable: true, filterable: true },
-        { text: "Stok", value: "stock", sortable: true },
-        { text: "Harga", value: "price", sortable: true }
+        { text: "Nomor Telepon", value: "phone_number", filterable: true },
+        { text: "Email", value: "email", filterable: true },
+        { text: "Alamat", value: "address", sortable: true, filterable: true }
       ],
       search: ""
     }
   },
   methods: {
-    getProducts() {
-      axios.get('http://localhost:8000/products/')
+    getSuppliers() {
+      axios.get('http://localhost:8000/entities/suppliers/')
         .then((response) => {
-          this.products = response.data;
+          this.suppliers = response.data;
         })
     }
   },
   created() {
-    this.getProducts();
+    this.getSuppliers();
   }
 }
 </script>

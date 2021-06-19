@@ -5,6 +5,7 @@
       <v-form 
         @submit.prevent="submitForm"
         ref="form"
+        v-model="isFormValid"
       >
         <v-row class="mt-4">
           <v-col class="col-12">
@@ -54,14 +55,32 @@
           </v-btn>
         </div>
       </v-form>
+      <v-snackbar
+        v-model="snackbar"
+      >
+        {{snackbar_text}}
+        <template v-slot:action="{ attrs }">
+          <v-btn
+            color="blue"
+            text
+            v-bind="attrs"
+            @click="snackbar = false"
+          >
+            Tutup
+          </v-btn>
+        </template>
+      </v-snackbar>
     </v-container>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
+      isFormValid: false,
       form: {
         name: null,
         phone_number: null,
@@ -82,12 +101,28 @@ export default {
         address: [
           v => !!v || `Alamat wajib diisi`
         ]
-      }
+      },
+      snackbar: false,
+      snackbar_text: ""
     };
   },
   methods: {
     submitForm() {
-      console.log(this.form);
+      if(this.isFormValid == false) {
+        return;
+      }
+      
+      axios.post("http://localhost:8000/entities/suppliers/", this.form, {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      })
+        .then(res => {
+          console.log(res)
+          this.snackbar_text = "Input berhasil!"
+          this.snackbar = true;
+          this.$refs.form.reset();
+        })
     }
   }
 }

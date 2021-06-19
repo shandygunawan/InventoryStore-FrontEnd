@@ -224,7 +224,7 @@
             v-bind="attrs"
             @click="snackbar = false"
           >
-            Close
+            Tutup
           </v-btn>
         </template>
       </v-snackbar>
@@ -343,8 +343,6 @@ export default {
         this.snackbar = true;
         return;
       }
-
-      console.log(this.$refs.form.validate());
 
       axios.post("http://localhost:8000/igog/incoming_create/", this.form, {
         headers: {
