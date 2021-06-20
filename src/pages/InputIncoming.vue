@@ -171,7 +171,7 @@
                 </td>
                 <td>
                   <v-text-field
-                    v-model="form.products[index].stock"
+                    v-model="form.products[index].count"
                     hide-details
                     single-line
                     dense
@@ -182,7 +182,7 @@
                 </td>
                 <td>
                   <v-text-field
-                    v-model="form.products[index].price"
+                    v-model="form.products[index].price_per_count"
                     hide-details
                     single-line
                     dense
@@ -192,7 +192,7 @@
                   />
                 </td>
                 <td>
-                  {{ form.products[index].stock * form.products[index].price }}
+                  {{ form.products[index].count * form.products[index].price_per_count }}
                 </td>
                 <td>
                   <v-btn 
@@ -289,8 +289,8 @@ export default {
     addProductsField() {
       this.form.products.push({
         id: null,
-        stock: 1,
-        price: 1000
+        count: 1,
+        price_per_count: 1000
       });
     },
     removeProductsField(index) {
@@ -344,7 +344,7 @@ export default {
         return;
       }
 
-      axios.post("http://localhost:8000/igog/incoming_create/", this.form, {
+      axios.post("http://localhost:8000/igog/incomings/", this.form, {
         headers: {
           'Content-Type': 'application/json',
         }

@@ -41,9 +41,14 @@ const routes = [
 
   // DETAIL
   {
-    path: '/products/:product_id',
+    path: '/products/:product_id/',
     name: "detail-product",
     component: () => import('../pages/DetailProduct.vue')
+  },
+  {
+    path: '/incomings/:incoming_id/',
+    name: "detail-incoming",
+    component: () => import('../pages/DetailIncoming.vue')
   },
 
   // INPUT
