@@ -43,6 +43,7 @@ export default {
     return {
       list_items: [
         { title: "Barang Masuk", route: "/incomings" },
+        { title: "Barang Keluar", route: "/outgoings" },
         { title: "Supplier", route: "/suppliers" },
         { title: "Pembeli" , route: "/buyers"},
         { title: "Produk", route: "/products" }

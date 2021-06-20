@@ -38,6 +38,11 @@ const routes = [
     name: 'list-incomings',
     component: () => import('../pages/ListIncomings.vue')
   },
+  {
+    path: '/outgoings',
+    name: 'list-outgoings',
+    component: () => import('../pages/ListOutgoings.vue')
+  },
 
   // DETAIL
   {
