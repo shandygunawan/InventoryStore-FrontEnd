@@ -55,6 +55,12 @@ const routes = [
     name: "detail-incoming",
     component: () => import('../pages/DetailIncoming.vue')
   },
+  {
+    path: '/outgoings/:outgoing_id/',
+    name: "detail-outgoing",
+    component: () => import('../pages/DetailOutgoing.vue')
+  },
+
 
   // INPUT
   {

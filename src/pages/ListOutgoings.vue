@@ -1,6 +1,6 @@
 <template>
   <div class="pa-3">
-    <h2>List Barang Masuk</h2>
+    <h2>List Barang Keluar</h2>
     <v-text-field class="mt-3" placeholder="Cari" v-model="search" prepend-icon="mdi-magnify"></v-text-field>
     <v-data-table
       :headers="headers"
@@ -27,7 +27,7 @@
               }) }}
             </td>
             <td>
-              <router-link :to="{ name: 'detail-incoming', params: { incoming_id: props.item.id } }">
+              <router-link :to="{ name: 'detail-outgoing', params: { outgoing_id: props.item.id } }">
                 <v-btn small text>Detail</v-btn>
               </router-link>
             </td>
