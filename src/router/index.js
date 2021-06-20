@@ -58,6 +58,11 @@ const routes = [
     component: () => import('../pages/InputIncoming.vue')
   },
   {
+    path: '/input/outgoing',
+    name: 'input-outgoing',
+    component: () => import('../pages/InputOutgoing.vue')
+  },
+  {
     path: '/input/supplier',
     name: 'input-supplier',
     component: () => import('../pages/InputSupplier.vue')

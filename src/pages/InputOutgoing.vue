@@ -1,6 +1,6 @@
 <template>
   <div class="pa-3">
-    <h1 class="text-center">Input Barang Masuk</h1>
+    <h1 class="text-center">Input Barang Keluar</h1>
     <v-container>
       <v-form 
         @submit.prevent="submitForm"
@@ -20,7 +20,7 @@
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
                   v-model="form.incoming_date"
-                  label="Tanggal Masuk"
+                  label="Tanggal Keluar"
                   prepend-icon="mdi-calendar"
                   readonly
                   v-bind="attrs"
@@ -48,7 +48,7 @@
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
                   v-model="form.incoming_time"
-                  label="Waktu Masuk"
+                  label="Waktu Keluar"
                   prepend-icon="mdi-clock-time-four-outline"
                   readonly
                   v-bind="attrs"
@@ -122,11 +122,11 @@
           </v-col>
           <v-col class="col-12 col-md-6">
             <v-autocomplete
-              v-model="form.supplier"
-              :items="supplier_data"
+              v-model="form.buyer"
+              :items="buyer_data"
               item-text="name"
               item-value="id"
-              label="Supplier"
+              label="Pembeli"
               :rules="[rules.required]"
             >
             </v-autocomplete>
@@ -254,7 +254,7 @@ export default {
         { text: "Lunas", value: "finished" }
       ],
       duedate_datepicker: false,
-      supplier_data: null,
+      buyer_data: null,
       products_data: null,
       form: {
         incoming_date: new Date().toISOString().substr(0, 10),
@@ -264,7 +264,7 @@ export default {
         payment_method: null,
         payment_status: null,
         duedate_date: new Date().toISOString().substr(0, 10),
-        supplier: null,
+        buyer: null,
         products: [],
       },
       rules: {
@@ -274,10 +274,10 @@ export default {
     }
   },
   methods: {
-    getSuppliersIncoming() {
-      axios.get('http://localhost:8000/entities/suppliers/igog')
+    getBuyersIncoming() {
+      axios.get('http://localhost:8000/entities/buyers/igog')
         .then((response) => {
-          this.supplier_data = response.data;
+          this.buyer_data = response.data;
         })
     },
     getProducts() {
@@ -312,7 +312,7 @@ export default {
       if (this.form.duedate_date === null || this.form.duedate_date === "") {
         return { valid: false, message: "Tanggal jatuh tempo harus diisi" };
       }
-      if (this.form.supplier === null || this.form.supplier === "") {
+      if (this.form.buyer === null || this.form.buyer === "") {
         return { valid: false, message: "Supplier harus diisi" };
       }
       if (this.form.products.length === 0) {
@@ -358,7 +358,7 @@ export default {
     }
   },
   created() {
-    this.getSuppliersIncoming();
+    this.getBuyersIncoming();
     this.getProducts();
   }
 }

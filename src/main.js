@@ -10,15 +10,28 @@ Vue.config.productionTip = false
 
 Vue.use(VueRouter);
 Vue.use(Vuetify);
-Vue.use(VueCurrencyFilter, {
-  symbol: 'Rp',
-  thousandsSeparator: '.',
-  fractionCount: 0,
-  fractionSeparator: ',',
-  symbolPosition: 'front',
-  symbolSpacing: true,
-  avoidEmptyDecimals: undefined,
-})
+Vue.use(VueCurrencyFilter, [
+  {
+    name: "currency_idr",
+    symbol: 'Rp',
+    thousandsSeparator: '.',
+    fractionCount: 0,
+    fractionSeparator: ',',
+    symbolPosition: 'front',
+    symbolSpacing: true,
+    avoidEmptyDecimals: undefined
+  },
+  {
+    name: "separator",
+    symbol: '',
+    thousandsSeparator: '.',
+    fractionCount: 0,
+    fractionSeparator: ',',
+    symbolPosition: 'front',
+    symbolSpacing: true,
+    avoidEmptyDecimals: undefined
+  },
+])
 
 new Vue({
   router,

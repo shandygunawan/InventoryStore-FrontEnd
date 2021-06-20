@@ -19,8 +19,8 @@
               {{ props.item.name }}
             </router-link>
           </td>
-          <td>{{ props.item.stock }}</td>
-          <td>{{ props.item.price }}</td>
+          <td>{{ props.item.stock | separator }}</td>
+          <td>{{ props.item.price | currency_idr }}</td>
         </tr>
      </template>
     </v-data-table>

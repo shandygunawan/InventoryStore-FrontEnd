@@ -82,9 +82,9 @@
             <template v-slot:item="props">
               <tr>
                 <td>{{ props.item.product }}</td>
-                <td>{{ props.item.count }}</td>
-                <td>{{ props.item.price_per_count | currency }}</td>
-                <td>{{ props.item.count * props.item.price_per_count | currency }}</td>
+                <td>{{ props.item.count | separator }}</td>
+                <td>{{ props.item.price_per_count | currency_idr }}</td>
+                <td>{{ props.item.count * props.item.price_per_count | currency_idr }}</td>
               </tr>
             </template>
           </v-data-table>

@@ -19,11 +19,11 @@
           <v-card-text>
             <v-row>
               <v-col class="col-3">Harga : </v-col>
-              <v-col class="col-3">{{ product.product.price }} </v-col>
+              <v-col class="col-3">{{ product.product.price | currency_idr }} </v-col>
             </v-row>
             <v-row>
               <v-col class="col-3">Stok : </v-col>
-              <v-col class="col-3">{{ product.product.stock }} </v-col>
+              <v-col class="col-3">{{ product.product.stock | separator }} </v-col>
             </v-row>
           </v-card-text>
         </v-card>
@@ -44,7 +44,7 @@
                 v-for="history in product.histories"
                 :key="history.price"
               >
-                <td>{{ history.price }}</td>
+                <td>{{ history.price | currency_idr }}</td>
                 <td>{{ new Date(history.date_created) }}</td>
               </tr>
             </tbody>
