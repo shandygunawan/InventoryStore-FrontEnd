@@ -10,7 +10,7 @@
         <v-row class="mt-4">
           <v-col class="col-12 col-md-6">
             <v-menu
-              v-model="incoming_datepicker"
+              v-model="outgoing_datepicker"
               :close-on-content-click="true"
               :nudge-right="40"
               transition="scale-transition"
@@ -19,7 +19,7 @@
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                  v-model="form.incoming_date"
+                  v-model="form.outgoing_date"
                   label="Tanggal Keluar"
                   prepend-icon="mdi-calendar"
                   readonly
@@ -28,7 +28,7 @@
                 ></v-text-field>
               </template>
               <v-date-picker
-                v-model="form.incoming_date"
+                v-model="form.outgoing_date"
                 @input="incoming_date = false"
               ></v-date-picker>
             </v-menu>
@@ -36,10 +36,10 @@
           <v-col class="col-12 col-md-6">
             <v-menu
               ref="menu"
-              v-model="incoming_timepicker"
+              v-model="outgoing_timepicker"
               :close-on-content-click="false"
               :nudge-right="40"
-              :return-value="form.incoming_time"
+              :return-value="form.outgoing_time"
               transition="scale-transition"
               offset-y
               max-width="290px"
@@ -47,7 +47,7 @@
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                  v-model="form.incoming_time"
+                  v-model="form.outgoing_time"
                   label="Waktu Keluar"
                   prepend-icon="mdi-clock-time-four-outline"
                   readonly
@@ -56,11 +56,11 @@
                 ></v-text-field>
               </template>
               <v-time-picker
-                v-if="incoming_timepicker"
-                v-model="form.incoming_time"
+                v-if="outgoing_timepicker"
+                v-model="form.outgoing_time"
                 full-width
                 format="24hr"
-                @click:minute="$refs.menu.save(form.incoming_time)"
+                @click:minute="$refs.menu.save(form.outgoing_time)"
               ></v-time-picker>
             </v-menu>
           </v-col>
@@ -239,8 +239,8 @@ export default {
   data() {
     return {
       isFormValid: false,
-      incoming_datepicker: false,
-      incoming_timepicker: false,
+      outgoing_datepicker: false,
+      outgoing_timepicker: false,
       snackbar: false,
       snackbar_text: "",
       payment_method_items: [
@@ -257,8 +257,8 @@ export default {
       buyer_data: null,
       products_data: null,
       form: {
-        incoming_date: new Date().toISOString().substr(0, 10),
-        incoming_time: new Date().toLocaleTimeString('en-US', { hour12: false, 
+        outgoing_date: new Date().toISOString().substr(0, 10),
+        outgoing_time: new Date().toLocaleTimeString('en-US', { hour12: false, 
                                               hour: "numeric", 
                                               minute: "numeric"}),
         payment_method: null,
@@ -313,7 +313,7 @@ export default {
         return { valid: false, message: "Tanggal jatuh tempo harus diisi" };
       }
       if (this.form.buyer === null || this.form.buyer === "") {
-        return { valid: false, message: "Supplier harus diisi" };
+        return { valid: false, message: "Pembeli harus diisi" };
       }
       if (this.form.products.length === 0) {
         return { valid: false, message: "Harus ada min. 1 produk" };
@@ -344,7 +344,7 @@ export default {
         return;
       }
 
-      axios.post("http://localhost:8000/igog/incomings/", this.form, {
+      axios.post("http://localhost:8000/igog/outgoings/", this.form, {
         headers: {
           'Content-Type': 'application/json',
         }
