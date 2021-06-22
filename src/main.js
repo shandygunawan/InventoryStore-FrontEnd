@@ -1,14 +1,23 @@
-import Vue from 'vue'
-import App from './App.vue'
+import Vue from 'vue';
+import Vuex from 'vuex';
 import VueRouter from 'vue-router';
-import router from './router';
+
+import axios from 'axios';
 import vuetify from './plugins/vuetify';
 import Vuetify from 'vuetify';
 import VueCurrencyFilter from 'vue-currency-filter';
 
+import App from './App.vue';
+import router from './router';
+import store from './store';
+
+// axios.defaults.withCredentials = true;
+axios.defaults.baseURL = "http://localhost:8000/";
+
 Vue.config.productionTip = false
 
 Vue.use(VueRouter);
+Vue.use(Vuex);
 Vue.use(Vuetify);
 Vue.use(VueCurrencyFilter, [
   {
@@ -36,5 +45,6 @@ Vue.use(VueCurrencyFilter, [
 new Vue({
   router,
   vuetify,
+  store,
   render: h => h(App)
 }).$mount('#app')

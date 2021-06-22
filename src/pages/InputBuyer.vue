@@ -110,7 +110,7 @@ export default {
         return;
       }
       
-      axios.post("http://localhost:8000/entities/buyers/", this.form, {
+      axios.post("entities/buyers/", this.form, {
         headers: {
           'Content-Type': 'application/json',
         }

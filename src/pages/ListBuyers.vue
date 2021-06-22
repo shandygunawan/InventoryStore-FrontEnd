@@ -42,7 +42,7 @@ export default {
   },
   methods: {
     getBuyers() {
-      axios.get('http://localhost:8000/entities/buyers/')
+      axios.get('entities/buyers/')
         .then((response) => {
           this.buyers = response.data;
         })

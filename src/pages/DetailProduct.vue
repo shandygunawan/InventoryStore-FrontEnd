@@ -66,7 +66,7 @@ export default {
   },
   methods: {
     getProductDetail() {
-      var url = 'http://localhost:8000/products/' + this.$route.params.product_id
+      var url = 'products/' + this.$route.params.product_id
       axios.get(url)
         .then((response) => {
           this.product = response.data;

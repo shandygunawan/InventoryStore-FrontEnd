@@ -42,10 +42,13 @@ export default {
   },
   methods: {
     getSuppliers() {
-      axios.get('http://localhost:8000/entities/suppliers/')
+      axios.get('entities/suppliers/')
         .then((response) => {
           this.suppliers = response.data;
         })
+        .catch(function (error) {
+          console.log(error);
+        });
     }
   },
   created() {

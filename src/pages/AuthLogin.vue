@@ -3,6 +3,7 @@
     <v-form
       @submit.prevent="submitForm"
       ref="form"
+      v-model="isFormValid"
     >
       <v-container>
         <v-row class="justify-center">
@@ -50,6 +51,7 @@
 export default {
   data() {
     return {
+      isFormValid: false,
       form: {
         username: "",
         password: "",
@@ -63,18 +65,9 @@ export default {
     };
   },
   methods: {
-    checkFormValid() {
-      if (this.form.username === "" || this.form.username === null) {
-        return false;
-      }
-      if (this.form.password === "" || this.form.password === null) {
-        return false;
-      }
-      return true;
-    },
     submitForm() {
-      console.log(this.checkFormValid());
-      if (this.checkFormValid() === false) {
+      console.log(this.isFormValid);
+      if(this.isFormValid == false) {
         return;
       }
     }

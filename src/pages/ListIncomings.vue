@@ -63,7 +63,7 @@ export default {
       return str.join(' ');
     },
     getSuppliers() {
-      axios.get('http://localhost:8000/igog/incomings/')
+      axios.get('igog/incomings/')
         .then((response) => {
           this.incomings = response.data;
 

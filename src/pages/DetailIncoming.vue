@@ -134,7 +134,7 @@ export default {
       return str.join(' ');
     },
     getIncomingDetail() {
-      var url = 'http://localhost:8000/igog/incomings/' + this.$route.params.incoming_id + "/"
+      var url = 'igog/incomings/' + this.$route.params.incoming_id + "/"
       axios.get(url)
         .then((response) => {
           this.incoming = response.data;

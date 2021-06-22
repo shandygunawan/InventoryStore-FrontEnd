@@ -44,7 +44,7 @@ export default {
   },
   methods: {
     getProducts() {
-      axios.get('http://localhost:8000/products/')
+      axios.get('products/')
         .then((response) => {
           this.products = response.data;
         })

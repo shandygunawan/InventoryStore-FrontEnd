@@ -275,13 +275,13 @@ export default {
   },
   methods: {
     getSuppliersIncoming() {
-      axios.get('http://localhost:8000/entities/suppliers/igog')
+      axios.get('entities/suppliers/igog')
         .then((response) => {
           this.supplier_data = response.data;
         })
     },
     getProducts() {
-      axios.get('http://localhost:8000/products/')
+      axios.get('products/')
         .then((response) => {
           this.products_data = response.data;
         })
@@ -344,7 +344,7 @@ export default {
         return;
       }
 
-      axios.post("http://localhost:8000/igog/incomings/", this.form, {
+      axios.post("igog/incomings/", this.form, {
         headers: {
           'Content-Type': 'application/json',
         }
