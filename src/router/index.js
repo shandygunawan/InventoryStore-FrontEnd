@@ -5,12 +5,25 @@ import store from '../store/index.js';
 Vue.use(VueRouter)
 
 const routes = [
+
+  // HOME
+
+
   // AUTH
   {
     path: '/login',
     name: 'login',
     component: () => import('../pages/AuthLogin.vue'),
-    meta: { requiresUnauth: true }
+    meta: { requiresUnauth: true },
+    beforeEnter: (to, from, next) => {
+      if (store.getters.isAuthenticated) {
+        console.log("before enter");
+        next('/products');
+      }
+      else {
+        next();
+      }
+    }
   },
   // DASHBOARD
   {
@@ -68,22 +81,26 @@ const routes = [
   {
     path: '/input/incoming',
     name: 'input-incoming',
-    component: () => import('../pages/InputIncoming.vue')
+    component: () => import('../pages/InputIncoming.vue'),
+    meta: { requiresAuth: true },
   },
   {
     path: '/input/outgoing',
     name: 'input-outgoing',
-    component: () => import('../pages/InputOutgoing.vue')
+    component: () => import('../pages/InputOutgoing.vue'),
+    meta: { requiresAuth: true },
   },
   {
     path: '/input/supplier',
     name: 'input-supplier',
-    component: () => import('../pages/InputSupplier.vue')
+    component: () => import('../pages/InputSupplier.vue'),
+    meta: { requiresAuth: true },
   },
   {
     path: '/input/buyer',
     name: 'input-buyer',
-    component: () => import('../pages/InputBuyer.vue')
+    component: () => import('../pages/InputBuyer.vue'),
+    meta: { requiresAuth: true },
   },
   {
     path: '/input/product',
@@ -99,11 +116,15 @@ const router = new VueRouter({
   routes
 })
 
+store.dispatch('autoLogin');
+
 router.beforeEach(function(to, _, next) {
+  console.log(to.meta.requiresUnauth);
+  console.log(store.getters.isAuthenticated);
+
   if (to.meta.requiresAuth && !store.getters.isAuthenticated) {
+    console.log("auth");
     next('/login');
-  } else if (to.meta.requiresUnauth && store.getters.isAuthenticated) {
-    next('/products');
   } else {
     next();
   }

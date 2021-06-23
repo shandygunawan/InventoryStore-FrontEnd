@@ -16,8 +16,5 @@ export default {
   data: () => ({
     //
   }),
-  created() {
-    this.$store.dispatch('autoLogin');
-  }
 };
 </script>
