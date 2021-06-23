@@ -6,17 +6,19 @@
         <span>Store</span>
       </v-toolbar-title>
       
-      <router-link to="/dashboard">
+      <router-link v-if="role === 'admin'" to="/dashboard">
         <v-btn small depressed class="ml-5 mr-2">Dashboard</v-btn>
       </router-link>
       
       <navbar-dropdown
+        v-if="role === 'admin' || role === 'list'"
         list_name="List"
         :list_items="list_items"
         transition="slide-y-transition"
       />
 
       <navbar-dropdown
+        v-if="role === 'admin' || role === 'input'"
         list_name="Input"
         :list_items="input_items"
         transition="slide-x-transition"
@@ -68,6 +70,9 @@ export default {
   computed: {
     isLoggedIn() {
       return this.$store.getters.isAuthenticated;
+    },
+    role() {
+      return this.$store.getters.role;
     }
   },
   methods: {
