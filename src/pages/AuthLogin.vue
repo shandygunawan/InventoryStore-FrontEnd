@@ -31,6 +31,11 @@
                 ></v-text-field>
               </v-card-text>
 
+              <div v-if="isLoading" class="d-flex justify-center pa-3">
+                <v-progress-circular indeterminate></v-progress-circular>
+              </div>
+              <p class="text-center red--text" v-if="!!error">{{ error }}</p>
+
               <v-card-actions class="justify-center">
                 <v-btn
                   color="blue white--text"
@@ -61,15 +66,28 @@ export default {
         required: value => !!value || 'Wajib diisi',
         min: v => v.length >= 8 || 'Min. 8 karakter',
         usernameMatch: () => (`Username dan Password tidak cocok`),
-      }
+      },
+      isLoading: false,
+      error: null
     };
   },
   methods: {
-    submitForm() {
-      console.log(this.isFormValid);
+    async submitForm() {
       if(this.isFormValid == false) {
         return;
       }
+
+      this.isLoading = true;
+
+      try {
+        await this.$store.dispatch('login', this.form);
+      } catch (err) {
+        this.error = err.message;
+      }
+
+      this.isLoading = false;
+
+      this.$router.replace('/products');
     }
   }
 }

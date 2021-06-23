@@ -24,12 +24,20 @@
 
       <v-spacer></v-spacer>
 
-      <router-link to="/login">
-        <v-btn text>
-          <span>Masuk</span>
-          <v-icon right>mdi-login</v-icon>
+      <div v-if="!isLoggedIn">
+        <router-link to="/login">
+          <v-btn text>
+            <span>Masuk</span>
+            <v-icon right>mdi-login</v-icon>
+          </v-btn>
+        </router-link>
+      </div>
+      <div v-else>
+        <v-btn text @click="logout">
+          <span>Keluar</span>
+          <v-icon right>mdi-logout</v-icon>
         </v-btn>
-      </router-link>
+      </div>
     </v-app-bar>
   </nav>
 </template>
@@ -55,6 +63,17 @@ export default {
         { title: "Pembeli" , route: "/input/buyer"},
         { title: "Produk", route: "/input/product" }
       ]
+    }
+  },
+  computed: {
+    isLoggedIn() {
+      return this.$store.getters.isAuthenticated;
+    }
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch("logout");
+      this.$router.replace('/login');
     }
   }
 }

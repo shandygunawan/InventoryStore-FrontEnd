@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import store from '../store/index.js';
 
 Vue.use(VueRouter)
 
@@ -8,7 +9,8 @@ const routes = [
   {
     path: '/login',
     name: 'login',
-    component: () => import('../pages/AuthLogin.vue')
+    component: () => import('../pages/AuthLogin.vue'),
+    meta: { requiresUnauth: true }
   },
   // DASHBOARD
   {
@@ -86,7 +88,8 @@ const routes = [
   {
     path: '/input/product',
     name: 'input-product',
-    component: () => import('../pages/InputProduct.vue')
+    component: () => import('../pages/InputProduct.vue'),
+    meta: { requiresAuth: true },
   }
 ]
 
@@ -94,6 +97,16 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach(function(to, _, next) {
+  if (to.meta.requiresAuth && !store.getters.isAuthenticated) {
+    next('/login');
+  } else if (to.meta.requiresUnauth && store.getters.isAuthenticated) {
+    next('/products');
+  } else {
+    next();
+  }
 })
 
 export default router
