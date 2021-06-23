@@ -2,12 +2,15 @@ import axios from "axios";
 
 export const state = {
   token: null,
-  username: null
+  role: null
 };
 
 export const getters = {
   token(state) {
     return state.token;
+  },
+  role(state) {
+    return state.role;
   },
   isAuthenticated(state) {
     return !!state.token;
@@ -17,7 +20,7 @@ export const getters = {
 export const mutations = {
   setUser(state, payload) {
     state.token = payload.token;
-    state.username = payload.username;
+    state.role = payload.role;
   }
 };
 
@@ -32,11 +35,11 @@ export const actions = {
       });
 
       localStorage.setItem('token', response.data.access);
-      localStorage.setItem('username', response.data.username);
+      localStorage.setItem('role', response.data.role);
 
       context.commit("setUser", {
         token: response.data.access,
-        username: response.data.username
+        role: response.data.role
       })
     } catch (err) {
       throw new Error(err.response.data.detail);
@@ -45,21 +48,21 @@ export const actions = {
   signup() {},
   logout(context) {
     localStorage.removeItem('token');
-    localStorage.removeItem('username');
+    localStorage.removeItem('role');
     
     context.commit("setUser", {
       token: null,
-      username: null
+      role: null
     });
   },
   autoLogin(context) {
     const token = localStorage.getItem('token');
-    const username = localStorage.getItem('username');
+    const role = localStorage.getItem('role');
 
-    if (token && username) {
+    if (token && role) {
       context.commit('setUser', {
         token: token,
-        username: username
+        role: role
       })
     }
   }
