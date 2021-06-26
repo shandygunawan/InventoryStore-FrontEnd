@@ -13,6 +13,7 @@ import store from './store';
 
 // axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://localhost:8000/";
+axios.defaults.headers.common = { 'Authorization': `Bearer ${store.getters.token}` }
 
 Vue.config.productionTip = false
 
