@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import { axiosInstance } from '../main.js';
 
 export default {
   data() {
@@ -63,7 +63,7 @@ export default {
       return str.join(' ');
     },
     getSuppliers() {
-      axios.get('igog/incomings/')
+      axiosInstance.get('igog/incomings/')
         .then((response) => {
           this.incomings = response.data;
 
