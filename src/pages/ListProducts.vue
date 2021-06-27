@@ -28,7 +28,7 @@
 </template>
 
 <script>
-const axios = require("axios");
+import { axiosInstance } from '../main.js';
 
 export default {
   data() {
@@ -44,7 +44,7 @@ export default {
   },
   methods: {
     getProducts() {
-      axios.get('products/')
+      axiosInstance.get('products/')
         .then((response) => {
           this.products = response.data;
         })

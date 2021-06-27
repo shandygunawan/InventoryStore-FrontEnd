@@ -176,11 +176,12 @@ const router = new VueRouter({
 store.dispatch('autoLogin');
 
 router.beforeEach(function(to, _, next) {
-  const role = store.getters.role;
+
+  const user = store.getters.user;
 
   if ( to.meta.requiresAuth && !store.getters.isAuthenticated) {
     next('/login');
-  } else if ( to.meta.requiresAuth && !to.meta.allowedRoles.includes(role) ) {
+  } else if ( to.meta.requiresAuth && !to.meta.allowedRoles.includes(user.role) ) {
     next('/notallowed');
   } else {
     next();

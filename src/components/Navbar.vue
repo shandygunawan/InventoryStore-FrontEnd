@@ -72,7 +72,7 @@ export default {
       return this.$store.getters.isAuthenticated;
     },
     role() {
-      return this.$store.getters.role;
+      return this.$store.getters.user.role;
     }
   },
   methods: {

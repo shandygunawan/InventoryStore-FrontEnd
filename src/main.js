@@ -12,8 +12,16 @@ import router from './router';
 import store from './store';
 
 // axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "http://localhost:8000/";
-axios.defaults.headers.common = { 'Authorization': `Bearer ${store.getters.token}` }
+export const axiosLogin = axios.create({
+  baseURL: "http://localhost:8000/"
+})
+
+export const axiosInstance = axios.create({
+  baseURL: "http://localhost:8000/",
+  headers: {
+    'Authorization': `Bearer ${store.getters.token}`
+  }
+})
 
 Vue.config.productionTip = false
 

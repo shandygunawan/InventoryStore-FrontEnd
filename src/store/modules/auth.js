@@ -1,16 +1,16 @@
-import axios from "axios";
+import { axiosLogin }  from "../../main.js";
 
 export const state = {
   token: null,
-  role: null
+  user: null
 };
 
 export const getters = {
   token(state) {
     return state.token;
   },
-  role(state) {
-    return state.role;
+  user(state) {
+    return state.user;
   },
   isAuthenticated(state) {
     return !!state.token;
@@ -20,7 +20,7 @@ export const getters = {
 export const mutations = {
   setUser(state, payload) {
     state.token = payload.token;
-    state.role = payload.role;
+    state.user = payload.user;
   }
 };
 
@@ -28,18 +28,18 @@ export const actions = {
   
   async login(context, payload) {
     try {
-      const response = await axios.post("api/token/", payload, {
+      const response = await axiosLogin.post("auth/login/", payload, {
         headers: {
           'Content-Type': 'application/json',
         }
       });
 
       localStorage.setItem('token', response.data.access);
-      localStorage.setItem('role', response.data.role);
+      localStorage.setItem('user', JSON.stringify(response.data.authenticated_user));
 
       context.commit("setUser", {
         token: response.data.access,
-        role: response.data.role
+        user: response.data.authenticated_user
       })
     } catch (err) {
       throw new Error(err.response.data.detail);
@@ -48,21 +48,21 @@ export const actions = {
   signup() {},
   logout(context) {
     localStorage.removeItem('token');
-    localStorage.removeItem('role');
+    localStorage.removeItem('user');
     
     context.commit("setUser", {
       token: null,
-      role: null
+      user: null
     });
   },
   autoLogin(context) {
     const token = localStorage.getItem('token');
-    const role = localStorage.getItem('role');
+    const user = JSON.parse(localStorage.getItem('user'));
 
-    if (token && role) {
+    if (token && user) {
       context.commit('setUser', {
         token: token,
-        role: role
+        user: user
       })
     }
   }
