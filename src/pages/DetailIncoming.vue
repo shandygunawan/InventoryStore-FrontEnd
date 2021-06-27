@@ -10,8 +10,16 @@
               <template v-slot:default>
                 <tbody>
                   <tr>
+                    <td>Nomor Invoice</td>
+                    <td>: {{ incoming.invoice }}</td>
+                  </tr>
+                  <tr>
                     <td>Waktu Masuk</td>
                     <td>: {{ new Date(incoming.datetime) }}</td>
+                  </tr>
+                  <tr>
+                    <td>Total Harga</td>
+                    <td>: {{ total_incoming_price | currency_idr }}</td>
                   </tr>
                   <tr>
                     <td>Metode Pembayaran</td>
@@ -34,7 +42,7 @@
 
       <!-- Supplier Detail -->
       <v-col class="col-12 col-md-6">
-        <v-card>
+        <v-card style="height:100%">
           <v-card-title>Supplier</v-card-title>
           <v-card-text>
             <v-simple-table>
@@ -64,9 +72,34 @@
       </v-col>
     </v-row>
 
-    <!-- Products -->
     <v-row>
+      <!-- Note -->
       <v-col class="col-12 col-md-6">
+        <v-card style="height: 100%;">
+          <v-card-title>Catatan</v-card-title>
+          <v-card-text>
+            {{ incoming.note }}
+          </v-card-text>
+        </v-card>
+      </v-col>
+
+      <!-- Actions -->
+      <v-col class="col-12 col-md-6">
+        <v-card>
+          <v-card-title>Aksi</v-card-title>
+          <v-card-text>
+            <v-btn color="primary">
+              <v-icon left>mdi-file-pdf-outline</v-icon>
+              Cetak Surat Jalan
+            </v-btn>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+
+    <v-row>
+      <!-- Products -->
+      <v-col class="col-12">
         <v-card>
           <v-card-title>Produk</v-card-title>
           <v-data-table
@@ -90,21 +123,8 @@
           </v-data-table>
         </v-card>
       </v-col>
-
-      <!-- Actions -->
-      <v-col class="col-12 col-md-6">
-        <v-card>
-          <v-card-title>Aksi</v-card-title>
-          <v-card-text>
-            <v-btn color="primary">
-              <v-icon left>mdi-file-pdf-outline</v-icon>
-              Cetak Surat Jalan
-            </v-btn>
-
-          </v-card-text>
-        </v-card>
-      </v-col>
     </v-row>
+
   </div>
 </template>
 
@@ -115,6 +135,7 @@ export default {
   data() {
     return {
       incoming: null,
+      total_incoming_price: 0,
       vscroll_bench: 0,
       table_headers: [
         { text: "Nama", value: "name", sortable: true, filterable: true },
@@ -137,17 +158,24 @@ export default {
       var url = 'igog/incomings/' + this.$route.params.incoming_id + "/"
       axios.get(url)
         .then((response) => {
+          console.log(response.data);
           this.incoming = response.data;
           this.incoming['payment_method'] = this.titleCase(this.incoming['payment_method']);
           
           var payment_status = this.incoming['payment_status'];
           if (payment_status === "not_started") {
-              this.incoming['payment_status'] = "Belum Mulai Bayar"
-            } else if (payment_status === "installment") {
-              this.incoming['payment_status'] = "Cicilan"
-            } else if (payment_status === "finished") {
-              this.incoming['payment_status'] = "Lunas"
-            }
+            this.incoming['payment_status'] = "Belum Mulai Bayar"
+          } else if (payment_status === "installment") {
+            this.incoming['payment_status'] = "Cicilan"
+          } else if (payment_status === "finished") {
+            this.incoming['payment_status'] = "Lunas"
+          }
+
+          
+          for(var i = 0; i < this.incoming.products.length; i++) {
+            var price_total_per_item = this.incoming.products[i].count * this.incoming.products[i].price_per_count;
+            this.total_incoming_price = this.total_incoming_price + price_total_per_item;
+          }
         })
     }
   },
@@ -156,7 +184,3 @@ export default {
   }
 }
 </script>
-
-<style>
-
-</style>

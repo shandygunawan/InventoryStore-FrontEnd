@@ -14,6 +14,7 @@
     >
       <template v-slot:item="props">
           <tr>
+            <td>{{ props.item.invoice }}</td>
             <td>{{ new Date(props.item.datetime).toLocaleString('id-ID', {
               dateStyle: "long",
               timeStyle: "short"
@@ -45,6 +46,7 @@ export default {
     return {
       incomings: [],
       headers: [
+        { text: "Nomor Invoice", value: "invoice", sortable: true, filterable: true },
         { text: "Waktu Masuk", value: "datetime", sortable: true, filterable: true },
         { text: "Supplier", value: "supplier_name", sortable: true, filterable: true },
         { text: "Metode Pembayaran", value: "payment_method", sortable: true, filterable: true },

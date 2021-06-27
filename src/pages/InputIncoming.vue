@@ -6,8 +6,20 @@
         @submit.prevent="submitForm"
         ref="form"
       >
-        <!-- Datetime -->
+
         <v-row class="mt-4">
+          <v-col class="col-12">
+            <v-text-field
+              clearable
+              label="Nomor Invoice"
+              v-model="form.invoice"
+              :rules="rules.required"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+
+        <!-- Datetime -->
+        <v-row>
           <v-col class="col-12 col-md-6">
             <v-menu
               v-model="incoming_datepicker"
@@ -130,6 +142,16 @@
               :rules="[rules.required]"
             >
             </v-autocomplete>
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col class="col-12">
+            <v-textarea
+              clearable
+              label="Catatan"
+              v-model="form.note"
+            ></v-textarea>
           </v-col>
         </v-row>
 
@@ -257,6 +279,7 @@ export default {
       supplier_data: null,
       products_data: null,
       form: {
+        invoice: null,
         incoming_date: new Date().toISOString().substr(0, 10),
         incoming_time: new Date().toLocaleTimeString('en-US', { hour12: false, 
                                               hour: "numeric", 
@@ -264,6 +287,7 @@ export default {
         payment_method: null,
         payment_status: null,
         duedate_date: new Date().toISOString().substr(0, 10),
+        note: "",
         supplier: null,
         products: [],
       },
@@ -297,6 +321,9 @@ export default {
       this.form.products.splice(index, 1);
     },
     checkFormValid() {
+      if (this.form.invoice === null || this.form.invoice === "") {
+        return { valid: false, message: "Nomor invoice harus diisi" };
+      }
       if (this.form.incoming_date === null || this.form.incoming_date === "") {
         return { valid: false, message: "Tanggal masuk harus diisi" };
       }
