@@ -6,130 +6,200 @@
         @submit.prevent="submitForm"
         ref="form"
       >
-        <!-- Datetime -->
+        <!-- Invoice & Delivery Note -->
         <v-row class="mt-4">
-          <v-col class="col-12 col-md-6">
-            <v-menu
-              v-model="outgoing_datepicker"
-              :close-on-content-click="true"
-              :nudge-right="40"
-              transition="scale-transition"
-              offset-y
-              min-width="auto"
-            >
-              <template v-slot:activator="{ on, attrs }">
+          <v-col class="col-12">
+            <v-card>
+              <v-card-title>Invoice dan Surat Jalan</v-card-title>
+              <v-card-text>
                 <v-text-field
-                  v-model="form.outgoing_date"
-                  label="Tanggal Keluar"
-                  prepend-icon="mdi-calendar"
-                  readonly
-                  v-bind="attrs"
-                  v-on="on"
+                  clearable
+                  label="Nomor Invoice"
+                  v-model="form.invoice"
+                  :rules="rules.required"
                 ></v-text-field>
-              </template>
-              <v-date-picker
-                v-model="form.outgoing_date"
-                @input="incoming_date = false"
-              ></v-date-picker>
-            </v-menu>
-          </v-col>
-          <v-col class="col-12 col-md-6">
-            <v-menu
-              ref="menu"
-              v-model="outgoing_timepicker"
-              :close-on-content-click="false"
-              :nudge-right="40"
-              :return-value="form.outgoing_time"
-              transition="scale-transition"
-              offset-y
-              max-width="290px"
-              min-width="290px"
-            >
-              <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                  v-model="form.outgoing_time"
-                  label="Waktu Keluar"
-                  prepend-icon="mdi-clock-time-four-outline"
-                  readonly
-                  v-bind="attrs"
-                  v-on="on"
+                  clearable
+                  label="Nomor Surat Jalan"
+                  v-model="form.delivery_note"
+                  :rules="rules.required"
                 ></v-text-field>
-              </template>
-              <v-time-picker
-                v-if="outgoing_timepicker"
-                v-model="form.outgoing_time"
-                full-width
-                format="24hr"
-                @click:minute="$refs.menu.save(form.outgoing_time)"
-              ></v-time-picker>
-            </v-menu>
+                <v-autocomplete
+                  v-model="form.buyer"
+                  :items="buyer_data"
+                  item-text="name"
+                  item-value="id"
+                  label="Pembeli"
+                  :rules="[rules.required]"
+                ></v-autocomplete>
+                <v-select
+                  v-model="form.retrieval_type"
+                  :items="retrieval_type_items"
+                  item-text="text"
+                  item-value="value"
+                  label="Metode Pengiriman"
+                  required
+                ></v-select>
+              </v-card-text>
+            </v-card>
           </v-col>
         </v-row>
 
-        <!-- Payment Method & Status -->
+        <!-- Datetime -->
         <v-row>
-          <v-col class="col-12 col-md-6">
-            <v-select
-              v-model="form.payment_method"
-              :items="payment_method_items"
-              item-text="text"
-              item-value="value"
-              label="Metode Pembayaran"
-              required
-            >
-            </v-select>
-          </v-col>
-          <v-col class="col-12 col-md-6">
-            <v-select
-              v-model="form.payment_status"
-              :items="payment_status_items"
-              item-text="text"
-              item-value="value"
-              label="Status Pembayaran"
-              required
-            >
-            </v-select>
+          <v-col class="col-12">
+            <v-card>
+              <v-card-title>Waktu Masuk</v-card-title>
+              <v-card-text>
+                <v-row>
+                  <v-col class="col-12 col-md-6">
+                    <v-menu
+                      v-model="outgoing_datepicker"
+                      :close-on-content-click="true"
+                      :nudge-right="40"
+                      transition="scale-transition"
+                      offset-y
+                      min-width="auto"
+                    >
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-text-field
+                          v-model="form.outgoing_date"
+                          label="Tanggal Keluar"
+                          prepend-icon="mdi-calendar"
+                          readonly
+                          v-bind="attrs"
+                          v-on="on"
+                        ></v-text-field>
+                      </template>
+                      <v-date-picker
+                        v-model="form.outgoing_date"
+                        @input="outgoing_date = false"
+                      ></v-date-picker>
+                    </v-menu>
+                  </v-col>
+                  <v-col class="col-12 col-md-6">
+                    <v-menu
+                      ref="menu"
+                      v-model="outgoing_timepicker"
+                      :close-on-content-click="false"
+                      :nudge-right="40"
+                      :return-value="form.outgoing_time"
+                      transition="scale-transition"
+                      offset-y
+                      max-width="290px"
+                      min-width="290px"
+                    >
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-text-field
+                          v-model="form.outgoing_time"
+                          label="Waktu Keluar"
+                          prepend-icon="mdi-clock-time-four-outline"
+                          readonly
+                          v-bind="attrs"
+                          v-on="on"
+                        ></v-text-field>
+                      </template>
+                      <v-time-picker
+                        v-if="outgoing_timepicker"
+                        v-model="form.outgoing_time"
+                        full-width
+                        format="24hr"
+                        @click:minute="$refs.menu.save(form.outgoing_time)"
+                      ></v-time-picker>
+                    </v-menu>
+                  </v-col>
+                </v-row>
+              </v-card-text>
+            </v-card>  
           </v-col>
         </v-row>
 
-        <!-- Due Date & Supplier -->
-        <v-row>  
-          <v-col class="col-12 col-md-6">
-            <v-menu
-              v-model="duedate_datepicker"
-              :close-on-content-click="true"
-              :nudge-right="40"
-              transition="scale-transition"
-              offset-y
-              min-width="auto"
-            >
-              <template v-slot:activator="{ on, attrs }">
-                <v-text-field
-                  v-model="form.duedate_date"
-                  label="Tanggal Jatuh Tempo"
-                  prepend-icon="mdi-calendar"
-                  readonly
-                  v-bind="attrs"
-                  v-on="on"
-                ></v-text-field>
-              </template>
-              <v-date-picker
-                v-model="form.duedate_date"
-                @input="duedate_datepicker = false"
-              ></v-date-picker>
+        <!-- Payment -->
+        <v-row>
+          <v-col class="col-12">
+            <v-card>
+              <v-card-title>Pembayaran</v-card-title>
+              <v-card-text>
 
-            </v-menu>
+                <v-row>
+                  <!-- Payment Method -->
+                  <v-col class="col-12 col-md-6">
+                    <v-select
+                      v-model="form.payment_method"
+                      :items="payment_method_items"
+                      item-text="text"
+                      item-value="value"
+                      label="Metode Pembayaran"
+                      required
+                    ></v-select>
+                  </v-col>
+                  <!-- Payment Status -->
+                  <v-col class="col-12 col-md-6">
+                    <v-select
+                      v-model="form.payment_status"
+                      :items="payment_status_items"
+                      item-text="text"
+                      item-value="value"
+                      label="Status Pembayaran"
+                      required
+                    ></v-select>
+                  </v-col>
+                </v-row>
+
+                <!-- Only Show if user selected "Giro" as payment method -->
+                <v-row v-if="form.payment_method === 'giro'">  
+                  <!-- Due Date -->
+                  <v-col class="col-12 col-md-6">
+                    <v-menu
+                      v-model="installment_duedate"
+                      :close-on-content-click="true"
+                      :nudge-right="40"
+                      transition="scale-transition"
+                      offset-y
+                      min-width="auto"
+                    >
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-text-field
+                          v-model="form.installment_duedate"
+                          label="Tanggal Jatuh Tempo"
+                          prepend-icon="mdi-calendar"
+                          readonly
+                          v-bind="attrs"
+                          v-on="on"
+                        ></v-text-field>
+                      </template>
+                      <v-date-picker
+                        v-model="form.installment_duedate"
+                        @input="duedate_datepicker = false"
+                      ></v-date-picker>
+                    </v-menu>
+                  </v-col>
+
+                  <!-- Installment fee -->
+                  <v-col class="col-12 col-md-6">
+                    <v-text-field
+                      clearable
+                      label="Harga"
+                      type="number"
+                      v-model="form.installment_fee"
+                      :rules="rules.installment_fee"
+                      prefix="Rp"
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+
+              </v-card-text>
+            </v-card>
           </v-col>
-          <v-col class="col-12 col-md-6">
-            <v-autocomplete
-              v-model="form.buyer"
-              :items="buyer_data"
-              item-text="name"
-              item-value="id"
-              label="Pembeli"
-              :rules="[rules.required]"
-            >
-            </v-autocomplete>
+        </v-row>
+
+        <v-row>
+          <v-col class="col-12">
+            <v-textarea
+              clearable
+              label="Catatan"
+              v-model="form.note"
+            ></v-textarea>
           </v-col>
         </v-row>
 
@@ -243,6 +313,10 @@ export default {
       outgoing_timepicker: false,
       snackbar: false,
       snackbar_text: "",
+      retrieval_type_items: [
+        { text: "Diantar", value: "delivery"},
+        { text: "Diambil oleh pembeli ", value: "pickup"}
+      ],
       payment_method_items: [
         { text: "Cash", value: "cash" },
         { text: "Transfer", value: "transfer" },
@@ -257,13 +331,18 @@ export default {
       buyer_data: null,
       products_data: null,
       form: {
+        invoice: null,
+        delivery_note: null,
+        retrieval_type: null,
         outgoing_date: new Date().toISOString().substr(0, 10),
         outgoing_time: new Date().toLocaleTimeString('en-US', { hour12: false, 
                                               hour: "numeric", 
                                               minute: "numeric"}),
         payment_method: null,
         payment_status: null,
-        duedate_date: new Date().toISOString().substr(0, 10),
+        installment_duedate: new Date().toISOString().substr(0, 10),
+        installment_fee: null,
+        note: "",
         buyer: null,
         products: [],
       },
