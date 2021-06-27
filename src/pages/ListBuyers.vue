@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { axiosInstance } from '../main.js';
+import axios from 'axios';
 
 export default {
   data() {
@@ -42,7 +42,7 @@ export default {
   },
   methods: {
     getBuyers() {
-      axiosInstance.get('entities/buyers/')
+      axios.get('entities/buyers/')
         .then((response) => {
           this.buyers = response.data;
         })

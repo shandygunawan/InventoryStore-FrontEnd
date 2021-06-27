@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { axiosInstance } from '../main.js'; 
+import axios from 'axios';
 
 export default {
   data() {
@@ -42,7 +42,7 @@ export default {
   },
   methods: {
     getSuppliers() {
-      axiosInstance.get('entities/suppliers/')
+      axios.get('entities/suppliers/')
         .then((response) => {
           this.suppliers = response.data;
         })

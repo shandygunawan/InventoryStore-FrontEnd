@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import { axiosInstance } from '../main';
+import axios  from 'axios';
 
 export default {
   data() {
@@ -103,7 +103,7 @@ export default {
         return;
       }
 
-      axiosInstance.post("products/", this.form, {
+      axios.post("products/", this.form, {
         headers: {
           'Content-Type': 'application/json',
         }

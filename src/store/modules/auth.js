@@ -1,4 +1,4 @@
-import { axiosLogin }  from "../../main.js";
+import axios  from "axios";
 
 export const state = {
   token: null,
@@ -28,7 +28,7 @@ export const actions = {
   
   async login(context, payload) {
     try {
-      const response = await axiosLogin.post("auth/login/", payload, {
+      const response = await axios.post("auth/login/", payload, {
         headers: {
           'Content-Type': 'application/json',
         }

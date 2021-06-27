@@ -12,16 +12,16 @@ import router from './router';
 import store from './store';
 
 // axios.defaults.withCredentials = true;
-export const axiosLogin = axios.create({
-  baseURL: "http://localhost:8000/"
-})
+axios.defaults.baseURL = "http://localhost:8000/"
 
-export const axiosInstance = axios.create({
-  baseURL: "http://localhost:8000/",
-  headers: {
-    'Authorization': `Bearer ${store.getters.token}`
+axios.interceptors.request.use(function (config) {
+  console.log(config);
+  if (config.url !== "auth/login/") {
+    const token = store.getters.token;
+    config.headers.Authorization = `Bearer ${token}`;
   }
-})
+  return config;
+});
 
 Vue.config.productionTip = false
 

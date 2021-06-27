@@ -233,7 +233,7 @@
 </template>
 
 <script>
-import { axiosInstance } from '../main.js';
+import axios from 'axios';
 
 export default {
   data() {
@@ -275,13 +275,13 @@ export default {
   },
   methods: {
     getSuppliersIncoming() {
-      axiosInstance.get('entities/suppliers/igog')
+      axios.get('entities/suppliers/igog')
         .then((response) => {
           this.supplier_data = response.data;
         })
     },
     getProducts() {
-      axiosInstance.get('products/')
+      axios.get('products/')
         .then((response) => {
           this.products_data = response.data;
         })
@@ -344,9 +344,9 @@ export default {
         return;
       }
 
-      axiosInstance.post("igog/incomings/", this.form, {
+      axios.post("igog/incomings/", this.form, {
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         }
       })
         .then(res => {
