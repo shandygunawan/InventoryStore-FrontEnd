@@ -22,10 +22,6 @@
             <td>{{ props.item.buyer_name }}</td>
             <td>{{ props.item.payment_method }}</td>
             <td>{{ props.item.payment_status }}</td>
-            <td>{{ new Date(props.item.due_date).toLocaleString('id-iD', {
-              dateStyle: "long"
-              }) }}
-            </td>
             <td>
               <router-link :to="{ name: 'detail-outgoing', params: { outgoing_id: props.item.id } }">
                 <v-btn small text>Detail</v-btn>
@@ -49,7 +45,6 @@ export default {
         { text: "Pembeli", value: "buyer_name", sortable: true, filterable: true },
         { text: "Metode Pembayaran", value: "payment_method", sortable: true, filterable: true },
         { text: "Status Pembayaran", value: "payment_status", sortable: true, filterable: true },
-        { text: "Tanggal Jatuh Tempo", value: "due_date", sortable: true, filterable: true }
       ],
       search: ""
     }
