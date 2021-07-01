@@ -14,6 +14,8 @@
     >
       <template v-slot:item="props">
           <tr>
+            <td>{{ props.item.invoice }}</td>
+            <td>{{ props.item.delivery_note }}</td>
             <td>{{ new Date(props.item.datetime).toLocaleString('id-ID', {
               dateStyle: "long",
               timeStyle: "short"
@@ -21,7 +23,6 @@
             </td>
             <td>{{ props.item.buyer_name }}</td>
             <td>{{ props.item.payment_method }}</td>
-            <td>{{ props.item.payment_status }}</td>
             <td>
               <router-link :to="{ name: 'detail-outgoing', params: { outgoing_id: props.item.id } }">
                 <v-btn small text>Detail</v-btn>
@@ -41,10 +42,11 @@ export default {
     return {
       outgoings: [],
       headers: [
-        { text: "Waktu Masuk", value: "datetime", sortable: true, filterable: true },
+        { text: "Nomor Invoice", value: "invoice", sortable: true, filterable: true },
+        { text: "Nomor Surat Jalan", value: "delivery_note", sortable: true, filterable: true },
+        { text: "Waktu Keluar", value: "datetime", sortable: true, filterable: true },
         { text: "Pembeli", value: "buyer_name", sortable: true, filterable: true },
         { text: "Metode Pembayaran", value: "payment_method", sortable: true, filterable: true },
-        { text: "Status Pembayaran", value: "payment_status", sortable: true, filterable: true },
       ],
       search: ""
     }
@@ -61,21 +63,6 @@ export default {
       axios.get('igog/outgoings/')
         .then((response) => {
           this.outgoings = response.data;
-
-          for(var i = 0; i < this.outgoings.length; i++){
-            this.outgoings[i]['payment_method'] = this.titleCase(this.outgoings[i]['payment_method']);
-
-            var payment_status = this.outgoings[i]['payment_status'];
-
-            if (payment_status === "not_started") {
-              this.outgoings[i]['payment_status'] = "Belum Mulai Bayar"
-            } else if (payment_status === "installment") {
-              this.outgoings[i]['payment_status'] = "Cicilan"
-            } else if (payment_status === "finished") {
-              this.outgoings[i]['payment_status'] = "Lunas"
-            }
-          }
-
         })
     }
   },

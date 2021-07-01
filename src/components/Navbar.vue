@@ -7,7 +7,7 @@
       </v-toolbar-title>
       
       <router-link v-if="isLoggedIn && role === 'admin'" to="/dashboard">
-        <v-btn small depressed class="ml-5 mr-2">Dashboard</v-btn>
+        <v-btn small depressed class="ml-5">Dashboard</v-btn>
       </router-link>
       
       <navbar-dropdown
@@ -23,6 +23,10 @@
         :list_items="input_items"
         transition="slide-x-transition"
       />
+
+      <router-link v-if="isLoggedIn && role === 'admin'" to="/finance">
+        <v-btn small depressed>Keuangan</v-btn>
+      </router-link>
 
       <v-spacer></v-spacer>
 

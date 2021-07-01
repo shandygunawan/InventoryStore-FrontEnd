@@ -24,6 +24,7 @@ const routes = [
       }
     }
   },
+
   // DASHBOARD
   {
     path: '/dashboard',
@@ -34,6 +35,18 @@ const routes = [
       allowedRoles: ['admin']
     },
   },
+
+  // FINANCE
+  {
+    path: '/finance',
+    name: 'finance-overview',
+    component: () => import('../pages/FinanceOverview.vue'),
+    meta: { 
+      requiresAuth: true,
+      allowedRoles: ['admin']
+    },
+  },
+
 
   // LIST
   {

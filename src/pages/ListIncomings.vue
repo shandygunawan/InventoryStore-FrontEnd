@@ -15,6 +15,7 @@
       <template v-slot:item="props">
           <tr>
             <td>{{ props.item.invoice }}</td>
+            <td>{{ props.item.delivery_note }}</td>
             <td>{{ new Date(props.item.datetime).toLocaleString('id-ID', {
               dateStyle: "long",
               timeStyle: "short"
@@ -22,7 +23,6 @@
             </td>
             <td>{{ props.item.supplier_name }}</td>
             <td>{{ props.item.payment_method }}</td>
-            <td>{{ props.item.payment_status }}</td>
             <td>
               <router-link :to="{ name: 'detail-incoming', params: { incoming_id: props.item.id } }">
                 <v-btn small text>Detail</v-btn>
@@ -43,10 +43,10 @@ export default {
       incomings: [],
       headers: [
         { text: "Nomor Invoice", value: "invoice", sortable: true, filterable: true },
+        { text: "Nomor Surat Jalan", value: "delivery_note", sortable: true, filterable: true },
         { text: "Waktu Masuk", value: "datetime", sortable: true, filterable: true },
         { text: "Supplier", value: "supplier_name", sortable: true, filterable: true },
         { text: "Metode Pembayaran", value: "payment_method", sortable: true, filterable: true },
-        { text: "Status Pembayaran", value: "payment_status", sortable: true, filterable: true },
       ],
       search: ""
     }
@@ -63,21 +63,6 @@ export default {
       axios.get('igog/incomings/')
         .then((response) => {
           this.incomings = response.data;
-
-          for(var i = 0; i < this.incomings.length; i++){
-            this.incomings[i]['payment_method'] = this.titleCase(this.incomings[i]['payment_method']);
-
-            var payment_status = this.incomings[i]['payment_status'];
-
-            if (payment_status === "not_started") {
-              this.incomings[i]['payment_status'] = "Belum Mulai Bayar"
-            } else if (payment_status === "installment") {
-              this.incomings[i]['payment_status'] = "Cicilan"
-            } else if (payment_status === "finished") {
-              this.incomings[i]['payment_status'] = "Lunas"
-            }
-          }
-
         })
     }
   },
