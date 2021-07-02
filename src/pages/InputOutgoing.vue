@@ -133,11 +133,12 @@
                       required
                     ></v-select>
                   </v-col>
-                  <!-- Payment Status -->
+                  <!-- Installment Paid -->
                   <v-col class="col-12 col-md-6">
                     <v-select
-                      v-model="form.payment_status"
-                      :items="payment_status_items"
+                      v-model="form.installment_paid"
+                      v-if="form.payment_method === 'cash' || form.payment_method === 'transfer'"
+                      :items="installment_paid_items"
                       item-text="text"
                       item-value="value"
                       label="Status Pembayaran"
@@ -178,12 +179,10 @@
                   <!-- Installment fee -->
                   <v-col class="col-12 col-md-6">
                     <v-text-field
-                      clearable
-                      label="Harga"
+                      label="Tenor (Bulan)"
                       type="number"
-                      v-model="form.installment_fee"
-                      :rules="rules.installment_fee"
-                      prefix="Rp"
+                      v-model="form.installment_tenor"
+                      :rules="rules.installment_tenor"
                     ></v-text-field>
                   </v-col>
                 </v-row>
@@ -322,10 +321,9 @@ export default {
         { text: "Transfer", value: "transfer" },
         { text: "Giro", value: "giro" }
       ],
-      payment_status_items: [
-        { text: "Belum Dibayar", value: "not_started" },
-        { text: "Cicilan", value: "installment" },
-        { text: "Lunas", value: "finished" }
+      installment_paid_items: [
+        { text: "Belum Dibayar", value: 0 },
+        { text: "Lunas", value: 1 }
       ],
       duedate_datepicker: false,
       buyer_data: null,
@@ -339,9 +337,9 @@ export default {
                                               hour: "numeric", 
                                               minute: "numeric"}),
         payment_method: null,
-        payment_status: null,
+        installment_paid: null,
         installment_duedate: new Date().toISOString().substr(0, 10),
-        installment_fee: null,
+        installment_tenor: null,
         note: "",
         buyer: null,
         products: [],
@@ -385,11 +383,17 @@ export default {
       if (this.form.payment_method === null) {
         return { valid: false, message: "Metode pembayaran harus diisi" };
       }
-      if (this.form.payment_status === null) {
+      if ( (this.form.payment_method === "cash" || this.form.payment_method === "transfer" ) && 
+          this.form.installment_month === null) {
         return { valid: false, message: "Status pembayaran harus diisi" };
       }
-      if (this.form.duedate_date === null || this.form.duedate_date === "") {
+      if (this.form.payment_method === "giro" && 
+          (this.form.installment_duedate === null || this.form.installment_duedate === "") ) {
         return { valid: false, message: "Tanggal jatuh tempo harus diisi" };
+      }
+      if (this.form.payment_method === "giro" && 
+          (this.form.installment_tenor === null || this.form.installment_tenor === "") ) {
+        return { valid: false, message: "Tenor harus diisi" };
       }
       if (this.form.buyer === null || this.form.buyer === "") {
         return { valid: false, message: "Pembeli harus diisi" };
@@ -417,10 +421,17 @@ export default {
 
       var isValidObj = this.checkFormValid();
 
-      if(isValidObj['valid'] === false){
+      if (isValidObj['valid'] === false) {
         this.snackbar_text = isValidObj['message'];
         this.snackbar = true;
         return;
+      }
+
+      if (this.form.payment_method === "cash" || this.form.payment_method === "transfer") {
+        this.form.installment_tenor = 1;
+      }
+      if (this.form.payment_method === "giro") {
+        this.form.installment_paid = 0;
       }
 
       axios.post("igog/outgoings/", this.form, {
