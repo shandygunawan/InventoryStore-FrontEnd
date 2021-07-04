@@ -67,17 +67,25 @@
     <v-row>
       <v-col class="col-12 col-md-6">
         <v-card elevation="4">
-          <v-card-title>Harga Barang Masuk 1 Minggu Terakhir</v-card-title>
+          <v-card-title>Barang Keluar per Hari Selama 1 Minggu Terakhir</v-card-title>
           <v-card-text>
-            Grafik Garis
+            <chart-line
+              v-if="charts_loaded"
+              :chartdata="chart_data['incoming_7days']"
+              :options="chart_options['incoming_7days']"
+            ></chart-line>
           </v-card-text>
         </v-card>
       </v-col>
       <v-col class="col-12 col-md-6">
         <v-card elevation="4">
-          <v-card-title>Harga Barang Keluar 1 Minggu Terakhir</v-card-title>
+          <v-card-title>Barang Keluar per Hari Selama 1 Minggu Terakhir</v-card-title>
           <v-card-text>
-            Grafik Garis
+            <chart-line
+              v-if="charts_loaded"
+              :chartdata="chart_data['outgoing_7days']"
+              :options="chart_options['outgoing_7days']"
+            ></chart-line>
           </v-card-text>
         </v-card>
       </v-col>
@@ -146,9 +154,10 @@
 import axios from 'axios';
 
 import ChartBar from '../components/ChartBar.vue';
+import ChartLine from '../components/ChartLine.vue';
 
 export default {
-  components: { ChartBar },
+  components: { ChartBar, ChartLine },
   data() {
     return {
       quick_account: null,
@@ -176,11 +185,15 @@ export default {
           this.charts_loaded = false;
           this.quick_account = response.data.quick_account;
           this.payable_almost = Math.round((response.data.payable_almost.almost / response.data.payable_almost.num) * 100)
+          this.incoming_7days = response.data.incoming_7days;
+          this.outgoing_7days = response.data.outgoing_7days;
           this.topproducts = response.data.topproducts;
           this.topoutgoings = response.data.topoutgoings;
           this.topsuppliers = response.data.topsuppliers;
           this.topbuyers = response.data.topbuyers;
 
+          this.processLineChart(this.incoming_7days, "incoming_7days", "datetime_date", "total");
+          this.processLineChart(this.outgoing_7days, "outgoing_7days", "datetime_date", "total");
           this.processTopProducts();
           this.processTopOutgoings();
           this.processBarChart(this.topsuppliers, "topsuppliers", "name", "total_price");
@@ -208,6 +221,45 @@ export default {
       }
       this.chart_options[field_name] = { 
         maintainAspectRatio: false,
+        scales: {
+          yAxes: [{
+            ticks: {
+              callback: function(value) {
+                return value.toLocaleString("id",{style:"currency", currency:"IDR"});
+              }
+            }
+          }]
+        }
+      }
+    },
+    processLineChart(chart_json, field_name, label_name, data_name) {
+      let labels = [];
+      let data = [];
+      for (let i = 0; i < chart_json.length; i++) {
+        labels.push(chart_json[i][label_name]);
+        data.push(chart_json[i][data_name]);
+      }
+      this.chart_data[field_name] = {
+        labels: labels,
+        datasets: [{
+            label: 'Harga',
+            data: data,
+            fill: false,
+            borderColor: this.dynamicColor(),
+            tension: 1
+        }]
+      }
+      this.chart_options[field_name] = { 
+        maintainAspectRatio: false,
+        scales: {
+          yAxes: [{
+            ticks: {
+              callback: function(value) {
+                return value.toLocaleString("id",{style:"currency", currency:"IDR"});
+              }
+            }
+          }]
+        }
       }
     },
     processTopProducts() {
@@ -229,7 +281,16 @@ export default {
       }
       this.chart_options['topproducts'] = { 
         maintainAspectRatio: false,
-        onClick: this.redirectProduct
+        onClick: this.redirectProduct,
+        scales: {
+          yAxes: [{
+            ticks: {
+              callback: function(value) {
+                return value.toLocaleString("id",{style:"currency", currency:"IDR"});
+              }
+            }
+          }]
+        }
       } 
     },
     processTopOutgoings() {
@@ -251,7 +312,16 @@ export default {
       }
       this.chart_options['topoutgoings'] = { 
         maintainAspectRatio: false,
-        onClick: this.redirectOutgoing
+        onClick: this.redirectOutgoing,
+        scales: {
+          yAxes: [{
+            ticks: {
+              callback: function(value) {
+                return value.toLocaleString("id",{style:"currency", currency:"IDR"});
+              }
+            }
+          }]
+        }
       } 
     },
     redirectProduct(_, array) {
