@@ -65,26 +65,14 @@
 
 
     <v-row>
-      <v-col class="col-12 col-md-6">
+      <v-col class="col-12">
         <v-card elevation="4">
           <v-card-title>Harga Barang Masuk per Hari Selama 1 Minggu Terakhir</v-card-title>
           <v-card-text>
             <chart-line
               v-if="charts_loaded"
-              :chartdata="chart_data['incoming_7days']"
-              :options="chart_options['incoming_7days']"
-            ></chart-line>
-          </v-card-text>
-        </v-card>
-      </v-col>
-      <v-col class="col-12 col-md-6">
-        <v-card elevation="4">
-          <v-card-title>Harga Barang Keluar per Hari Selama 1 Minggu Terakhir</v-card-title>
-          <v-card-text>
-            <chart-line
-              v-if="charts_loaded"
-              :chartdata="chart_data['outgoing_7days']"
-              :options="chart_options['outgoing_7days']"
+              :chartdata="chart_data['igog_7days']"
+              :options="chart_options['igog_7days']"
             ></chart-line>
           </v-card-text>
         </v-card>
@@ -181,19 +169,26 @@ export default {
     },
     getFinanceData() {
       axios.get('igog/finance/overview/')
-        .then((response) => {          
+        .then((response) => {
           this.charts_loaded = false;
-          this.quick_account = response.data.quick_account;
-          this.payable_almost = Math.round((response.data.payable_almost.almost / response.data.payable_almost.num) * 100)
-          this.incoming_7days = response.data.incoming_7days;
-          this.outgoing_7days = response.data.outgoing_7days;
-          this.topproducts = response.data.topproducts;
-          this.topoutgoings = response.data.topoutgoings;
-          this.topsuppliers = response.data.topsuppliers;
-          this.topbuyers = response.data.topbuyers;
+          this.quick_account = response.data.data.quick_account;
+          this.payable_almost = Math.round((response.data.data.payable_almost.almost / response.data.data.payable_almost.num) * 100)
+          this.incoming_7days = response.data.data.incoming_7days;
+          this.outgoing_7days = response.data.data.outgoing_7days;
+          this.topproducts = response.data.data.topproducts;
+          this.topoutgoings = response.data.data.topoutgoings;
+          this.topsuppliers = response.data.data.topsuppliers;
+          this.topbuyers = response.data.data.topbuyers;
 
-          this.processLineChart(this.incoming_7days, "incoming_7days", "datetime_date", "total");
-          this.processLineChart(this.outgoing_7days, "outgoing_7days", "datetime_date", "total");
+          this.processLineChartMultiple(
+            this.incoming_7days, 
+            this.outgoing_7days, 
+            "igog_7days", 
+            "datetime_date", 
+            "total",
+            "Barang Masuk",
+            "Barang Keluar"
+          );
           this.processTopProducts();
           this.processTopOutgoings();
           this.processBarChart(this.topsuppliers, "topsuppliers", "name", "total_price");
@@ -232,22 +227,33 @@ export default {
         }
       }
     },
-    processLineChart(chart_json, field_name, label_name, data_name) {
+    processLineChartMultiple(chart_json1, chart_json2, field_name, label_name, data_name, legend_1, legend_2) {
       let labels = [];
-      let data = [];
-      for (let i = 0; i < chart_json.length; i++) {
-        labels.push(chart_json[i][label_name]);
-        data.push(chart_json[i][data_name]);
+      let data1 = [];
+      let data2 = [];
+      for (let i = 0; i < chart_json1.length; i++) {
+        labels.push(chart_json1[i][label_name]);
+        data1.push(chart_json1[i][data_name]);
+        data2.push(chart_json2[i][data_name]);
       }
       this.chart_data[field_name] = {
         labels: labels,
-        datasets: [{
-            label: 'Harga',
-            data: data,
+        datasets: [
+          {
+            label: legend_1,
+            data: data1,
             fill: false,
             borderColor: this.dynamicColor(),
             tension: 1
-        }]
+          }, 
+          {
+            label: legend_2,
+            data: data2,
+            fill: false,
+            borderColor: this.dynamicColor(),
+            tension: 1
+          }
+        ]
       }
       this.chart_options[field_name] = { 
         maintainAspectRatio: false,
