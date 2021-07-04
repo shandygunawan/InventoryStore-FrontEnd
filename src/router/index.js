@@ -6,9 +6,6 @@ Vue.use(VueRouter)
 
 const routes = [
 
-  // HOME
-
-
   // AUTH
   {
     path: '/login',
@@ -24,38 +21,6 @@ const routes = [
       }
     }
   },
-
-  // DASHBOARD
-  {
-    path: '/dashboard',
-    name: 'dashboard',
-    component: () => import('../pages/Dashboard.vue'),
-    meta: { 
-      requiresAuth: true,
-      allowedRoles: ['admin']
-    },
-  },
-
-  // FINANCE
-  {
-    path: '/finance',
-    name: 'finance-overview',
-    component: () => import('../pages/FinanceOverview.vue'),
-    meta: { 
-      requiresAuth: true,
-      allowedRoles: ['admin']
-    },
-  },
-  {
-    path: '/finance/debt',
-    name: 'finance-debt',
-    component: () => import('../pages/FinanceDebt.vue'),
-    meta: { 
-      requiresAuth: true,
-      allowedRoles: ['admin']
-    },
-  },
-
 
   // LIST
   {
@@ -178,6 +143,37 @@ const routes = [
     meta: { 
       requiresAuth: true,
       allowedRoles: ['admin', 'input']
+    },
+  },
+
+  // FINANCE
+  {
+    path: '/finance',
+    name: 'finance-overview',
+    component: () => import('../pages/FinanceOverview.vue'),
+    meta: { 
+      requiresAuth: true,
+      allowedRoles: ['admin']
+    },
+  },
+  {
+    path: '/finance/debt',
+    name: 'finance-debt',
+    component: () => import('../pages/FinanceDebt.vue'),
+    meta: { 
+      requiresAuth: true,
+      allowedRoles: ['admin']
+    },
+  },
+
+  // STOCK
+  {
+    path: '/stock',
+    name: 'stock-overview',
+    component: () => import('../pages/StockOverview.vue'),
+    meta: { 
+      requiresAuth: true,
+      allowedRoles: ['admin']
     },
   },
 

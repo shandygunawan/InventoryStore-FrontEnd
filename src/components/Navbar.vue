@@ -5,6 +5,7 @@
         <span class="font-weight-light">Inventory</span>
         <span>Store</span>
       </v-toolbar-title>
+      
       <div class="ml-5"></div>
 
       <navbar-dropdown
