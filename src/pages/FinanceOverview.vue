@@ -67,7 +67,7 @@
     <v-row>
       <v-col class="col-12 col-md-6">
         <v-card elevation="4">
-          <v-card-title>Barang Keluar per Hari Selama 1 Minggu Terakhir</v-card-title>
+          <v-card-title>Harga Barang Masuk per Hari Selama 1 Minggu Terakhir</v-card-title>
           <v-card-text>
             <chart-line
               v-if="charts_loaded"
@@ -79,7 +79,7 @@
       </v-col>
       <v-col class="col-12 col-md-6">
         <v-card elevation="4">
-          <v-card-title>Barang Keluar per Hari Selama 1 Minggu Terakhir</v-card-title>
+          <v-card-title>Harga Barang Keluar per Hari Selama 1 Minggu Terakhir</v-card-title>
           <v-card-text>
             <chart-line
               v-if="charts_loaded"

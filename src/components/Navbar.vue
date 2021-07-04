@@ -5,11 +5,8 @@
         <span class="font-weight-light">Inventory</span>
         <span>Store</span>
       </v-toolbar-title>
-      
-      <router-link v-if="isLoggedIn && role === 'admin'" to="/dashboard">
-        <v-btn small depressed class="ml-5">Dashboard</v-btn>
-      </router-link>
-      
+      <div class="ml-5"></div>
+
       <navbar-dropdown
         v-if="isLoggedIn && role === 'admin'"
         list_name="List"
@@ -24,8 +21,15 @@
         transition="slide-x-transition"
       />
 
-      <router-link v-if="isLoggedIn && role === 'admin'" to="/finance">
-        <v-btn small depressed>Keuangan</v-btn>
+      <navbar-dropdown
+        v-if="isLoggedIn && role === 'admin'"
+        list_name="Keuangan"
+        :list_items="finance_items"
+        transition="slide-y-transition"
+      />
+
+      <router-link v-if="isLoggedIn && role === 'admin'" to="/stock">
+        <v-btn small depressed>Stok</v-btn>
       </router-link>
 
       <v-spacer></v-spacer>
@@ -68,6 +72,10 @@ export default {
         { title: "Supplier", route: "/input/supplier" },
         { title: "Pembeli" , route: "/input/buyer"},
         { title: "Produk", route: "/input/product" }
+      ],
+      finance_items: [
+        { title: "Overview", route: "/finance" },
+        { title: "Hutang", route: "/finance/debt" },
       ]
     }
   },

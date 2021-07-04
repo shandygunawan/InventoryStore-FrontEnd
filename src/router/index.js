@@ -46,6 +46,15 @@ const routes = [
       allowedRoles: ['admin']
     },
   },
+  {
+    path: '/finance/debt',
+    name: 'finance-debt',
+    component: () => import('../pages/FinanceDebt.vue'),
+    meta: { 
+      requiresAuth: true,
+      allowedRoles: ['admin']
+    },
+  },
 
 
   // LIST
