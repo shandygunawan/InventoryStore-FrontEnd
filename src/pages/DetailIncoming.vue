@@ -23,15 +23,19 @@
                   </tr>
                   <tr>
                     <td>Metode Pembayaran</td>
-                    <td>: {{ incoming.payment_method }}</td>
+                    <td>: {{ titleCase(incoming.payment_method) }}</td>
                   </tr>
                   <tr>
                     <td>Status Pembayaran</td>
                     <td>: {{ incoming.payment_status }}</td>
                   </tr>
-                  <tr>
+                  <tr v-if="incoming.payment_method === 'giro'">
                     <td>Tanggal Jatuh Tempo</td>
-                    <td>: {{ incoming.due_date }}</td>
+                    <td>: {{ incoming.installment_duedate }}</td>
+                  </tr>
+                  <tr v-if="incoming.payment_method === 'giro'">
+                    <td>Pembayaran Ke-</td>
+                    <td>: {{ incoming.installment_paid }}/{{ incoming.installment_tenor }} </td>
                   </tr>
                 </tbody>
               </template>
@@ -83,16 +87,36 @@
         </v-card>
       </v-col>
 
-      <!-- Actions -->
+      <!-- Delivery Note -->
       <v-col class="col-12 col-md-6">
         <v-card>
-          <v-card-title>Aksi</v-card-title>
+          <v-card-title>Surat Jalan</v-card-title>
           <v-card-text>
+            <v-simple-table>
+              <template v-slot:default>
+                <tbody>
+                  <tr>
+                    <td>Nomor Surat Jalan</td>
+                    <td>: {{ incoming.delivery_note }}</td>
+                  </tr>
+                  <tr>
+                    <td>Jenis Pengambilan</td>
+                    <td>: {{ titleCase(incoming.retrieval_type) }}</td>
+                  </tr>
+                  <tr>
+                    <td>Tanggal Pengambilan</td>
+                    <td>: {{ incoming.retrieval_date }}</td>
+                  </tr>
+                </tbody>
+              </template>
+            </v-simple-table>
+          </v-card-text>
+          <v-card-actions>
             <v-btn color="primary">
               <v-icon left>mdi-file-pdf-outline</v-icon>
               Cetak Surat Jalan
             </v-btn>
-          </v-card-text>
+          </v-card-actions>
         </v-card>
       </v-col>
     </v-row>
@@ -160,15 +184,17 @@ export default {
         .then((response) => {
           console.log(response.data);
           this.incoming = response.data;
-          this.incoming['payment_method'] = this.titleCase(this.incoming['payment_method']);
+          // this.incoming['payment_method'] = this.titleCase(this.incoming['payment_method']);
           
-          var payment_status = this.incoming['payment_status'];
-          if (payment_status === "not_started") {
-            this.incoming['payment_status'] = "Belum Mulai Bayar"
-          } else if (payment_status === "installment") {
-            this.incoming['payment_status'] = "Cicilan"
-          } else if (payment_status === "finished") {
+          let installment_paid = this.incoming['installment_paid'];
+          let installment_tenor = this.incoming['installment_tenor'];
+
+          if (installment_paid === installment_tenor) {
             this.incoming['payment_status'] = "Lunas"
+          } else if (installment_paid > 0 && installment_paid < installment_tenor) {
+            this.incoming['payment_status'] = "Sedang Dicicil"
+          } else if (installment_paid === 0) {
+            this.incoming['payment_status'] = "Belum Dibayar"
           }
 
           
