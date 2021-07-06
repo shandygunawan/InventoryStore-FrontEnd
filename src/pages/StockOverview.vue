@@ -19,7 +19,7 @@
                 <v-select
                   v-model="highfrequency_incoming.top"
                   :items="highfrequency_incoming.selections_top"
-                  @input="getDataHighFrequencyOutgoing"
+                  @input="getDataHighFrequencyIncoming"
                   prepend-icon="mdi-align-vertical-top"
                   dense
                 ></v-select>
