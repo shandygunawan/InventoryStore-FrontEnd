@@ -15,7 +15,6 @@ import store from './store';
 axios.defaults.baseURL = "http://localhost:8000/"
 
 axios.interceptors.request.use(function (config) {
-  console.log(config);
   if (config.url !== "auth/login/") {
     const token = store.getters.token;
     config.headers.Authorization = `Bearer ${token}`;

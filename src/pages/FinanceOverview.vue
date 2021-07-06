@@ -244,14 +244,12 @@ export default {
             data: data1,
             fill: false,
             borderColor: this.dynamicColor(),
-            tension: 1
           }, 
           {
             label: legend_2,
             data: data2,
             fill: false,
             borderColor: this.dynamicColor(),
-            tension: 1
           }
         ]
       }
@@ -265,6 +263,11 @@ export default {
               }
             }
           }]
+        },
+        elements: {
+          line: {
+            tension: 0
+          }
         }
       }
     },
