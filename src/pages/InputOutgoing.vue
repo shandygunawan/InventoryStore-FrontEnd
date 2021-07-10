@@ -374,6 +374,7 @@ export default {
       this.form.products.splice(index, 1);
     },
     checkFormValid() {
+      // Check if field is filled
       if (this.form.incoming_date === null || this.form.incoming_date === "") {
         return { valid: false, message: "Tanggal masuk harus diisi" };
       }
@@ -402,17 +403,29 @@ export default {
         return { valid: false, message: "Harus ada min. 1 produk" };
       }
       if (this.form.products.length > 0) {
+        // Check if product names are empty
         for (var i = 0; i < this.form.products.length; i++) {
           if (this.form.products[i]['id'] === null || this.form.products[i]['id'] === "") {
             return { valid: false, message: "Nama Produk harus diisi" };
           }
-          if (this.form.products[i]['stock'] < 1) {
+          if (this.form.products[i]['count'] < 1) {
             return { valid: false, message: "Banyak Produk harus lebih dari 0" };
           }
-          if (this.form.products[i]['price'] < 1) {
+
+          let product_selected = this.products_data.find(o => o.id === parseInt(this.form.products[i]['id']));
+          
+          if (this.form.products[i]['count'] > product_selected['stock'] ) {
+            return { 
+              valid: false,
+              message: "Banyak " + product_selected['name'] + " yang keluar lebih banyak dari stok yang ada" 
+            };
+          }
+
+          if (this.form.products[i]['price_per_count'] < 1) {
             return { valid: false, message: "Harga Produk harus lebih dari 0" };
           }
         }
+
       }
 
       return { valid: true, message: "Valid" };
