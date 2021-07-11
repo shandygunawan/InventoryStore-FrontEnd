@@ -12,7 +12,7 @@
           <v-col class="col-12">
             <v-text-field
               clearable
-              label="Nama Barang"
+              label="Nama"
               v-model="form.name"
               :rules="rules.name"
             ></v-text-field>
