@@ -29,7 +29,7 @@ const routes = [
     component: () => import('../pages/ListSuppliers.vue'),
     meta: { 
       requiresAuth: true,
-      allowedRoles: ['admin']
+      allowedRoles: ['admin', 'look']
     },
   },
   {
@@ -38,7 +38,7 @@ const routes = [
     component: () => import('../pages/ListBuyers.vue'),
     meta: { 
       requiresAuth: true,
-      allowedRoles: ['admin']
+      allowedRoles: ['admin', 'look']
     },
   },
   {
@@ -47,7 +47,7 @@ const routes = [
     component: () => import('../pages/ListProducts.vue'),
     meta: { 
       requiresAuth: true,
-      allowedRoles: ['admin']
+      allowedRoles: ['admin', 'look']
     },
   },
   {
@@ -56,7 +56,7 @@ const routes = [
     component: () => import('../pages/ListIncomings.vue'),
     meta: { 
       requiresAuth: true,
-      allowedRoles: ['admin']
+      allowedRoles: ['admin', 'look']
     },
   },
   {
@@ -65,7 +65,7 @@ const routes = [
     component: () => import('../pages/ListOutgoings.vue'),
     meta: { 
       requiresAuth: true,
-      allowedRoles: ['admin']
+      allowedRoles: ['admin', 'look']
     },
   },
 

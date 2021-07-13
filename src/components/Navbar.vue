@@ -9,14 +9,14 @@
       <div class="ml-5"></div>
 
       <navbar-dropdown
-        v-if="isLoggedIn && role === 'admin'"
+        v-if="isLoggedIn && (role === 'admin' || role === 'look')"
         list_name="List"
         :list_items="list_items"
         transition="slide-y-transition"
       />
 
       <navbar-dropdown
-        v-if="isLoggedIn && role === 'admin'"
+        v-if="isLoggedIn && (role === 'admin' || role === 'input') "
         list_name="Input"
         :list_items="input_items"
         transition="slide-x-transition"
