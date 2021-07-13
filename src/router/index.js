@@ -179,9 +179,9 @@ const routes = [
 
   // ADMIN
   {
-    path: '/admin/users',
-    name: 'admin-users',
-    component: () => import('../pages/AdminUsers.vue'),
+    path: '/admin/accounts',
+    name: 'admin-accounts',
+    component: () => import('../pages/AdminAccounts.vue'),
     meta: { 
       requiresAuth: true,
       allowedRoles: ['admin']

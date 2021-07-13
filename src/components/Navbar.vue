@@ -39,7 +39,7 @@
         :list_items="admin_items"
         transition="slide-x-transition"
       />
-      
+
       <v-spacer></v-spacer>
 
       <div v-if="!isLoggedIn">
@@ -86,7 +86,7 @@ export default {
         { title: "Hutang", route: "/finance/debt" },
       ],
       admin_items: [
-        { title: "User", route: "/admin/users" }
+        { title: "Akun", route: "/admin/accounts" }
       ]
     }
   },
