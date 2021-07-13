@@ -33,6 +33,13 @@
         <v-btn small depressed>Stok</v-btn>
       </router-link>
 
+      <navbar-dropdown
+        v-if="isLoggedIn && role === 'admin'"
+        list_name="Admin"
+        :list_items="admin_items"
+        transition="slide-x-transition"
+      />
+      
       <v-spacer></v-spacer>
 
       <div v-if="!isLoggedIn">
@@ -77,6 +84,9 @@ export default {
       finance_items: [
         { title: "Overview", route: "/finance" },
         { title: "Hutang", route: "/finance/debt" },
+      ],
+      admin_items: [
+        { title: "User", route: "/admin/users" }
       ]
     }
   },

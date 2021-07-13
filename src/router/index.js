@@ -177,6 +177,17 @@ const routes = [
     },
   },
 
+  // ADMIN
+  {
+    path: '/admin/users',
+    name: 'admin-users',
+    component: () => import('../pages/AdminUsers.vue'),
+    meta: { 
+      requiresAuth: true,
+      allowedRoles: ['admin']
+    },
+  },
+
   // OTHER
   {
     path: '/notallowed',
