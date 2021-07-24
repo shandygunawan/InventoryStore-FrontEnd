@@ -14,11 +14,20 @@ const routes = [
     meta: { requiresUnauth: true },
     beforeEnter: (to, from, next) => {
       if (store.getters.isAuthenticated) {
-        next('/products');
+        next('/');
       }
       else {
         next();
       }
+    }
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: () => import('../pages/InputAccount.vue'),
+    meta: { 
+      requiresAuth: true,
+      allowedRoles: ['admin']
     }
   },
 

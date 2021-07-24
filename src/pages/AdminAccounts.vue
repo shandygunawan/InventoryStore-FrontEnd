@@ -97,15 +97,20 @@
           vertical
         ></v-divider>
         <v-spacer></v-spacer>
-        <v-btn
-          color="primary"
-          dark
-          class="mb-2"
-          v-bind="attrs"
-          v-on="on"
+
+        <router-link
+          to="/register"
         >
-          Buat Akun Baru
-        </v-btn>
+          <v-btn
+            color="primary"
+            dark
+            class="mb-2"
+            v-bind="attrs"
+            v-on="on"
+          >
+            Buat Akun Baru
+          </v-btn>
+        </router-link>
         
       </v-toolbar>
     </template>
