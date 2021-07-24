@@ -68,25 +68,26 @@ export default {
   data() {
     return {
       list_items: [
-        { title: "Barang Masuk", route: "/incomings" },
-        { title: "Barang Keluar", route: "/outgoings" },
-        { title: "Supplier", route: "/suppliers" },
-        { title: "Pembeli" , route: "/buyers"},
-        { title: "Produk", route: "/products" }
+        { title: "Barang Masuk", route: { name: "list-incomings" } },
+        { title: "Barang Keluar", route: { name: "list-outgoings"} },
+        { title: "Supplier", route: { name: "list-suppliers"} },
+        { title: "Pembeli" , route: { name: "list-buyers"} },
+        { title: "Produk", route: { name: "list-products"} }
       ],
       input_items: [
-        { title: "Barang Masuk", route: "/input/incoming" },
-        { title: "Barang Keluar", route: "/input/outgoing" },
-        { title: "Supplier", route: "/input/supplier" },
-        { title: "Pembeli" , route: "/input/buyer"},
-        { title: "Produk", route: "/input/product" }
+        { title: "Barang Masuk", route: { name: "input-incoming" } },
+        { title: "Barang Keluar", route: { name: "input-outgoing" } },
+        { title: "Supplier", route: { name: "input-supplier" } },
+        { title: "Pembeli" , route: { name: "input-buyer" } },
+        { title: "Produk", route: { name: "input-product" } }
       ],
       finance_items: [
-        { title: "Overview", route: "/finance" },
-        { title: "Hutang", route: "/finance/debt" },
+        { title: "Overview", route: { name: "finance-overview" } },
+        { title: "Hutang", route: { name: "finance-debt"} },
       ],
       admin_items: [
-        { title: "Akun", route: "/admin/accounts" }
+        { title: "Akun", route: { name: "admin-accounts" } },
+        { title: "Database", route: { name: "admin-database" } },
       ]
     }
   },

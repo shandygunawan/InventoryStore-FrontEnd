@@ -196,6 +196,15 @@ const routes = [
       allowedRoles: ['admin']
     },
   },
+  {
+    path: '/admin/database',
+    name: 'admin-database',
+    component: () => import('../pages/AdminDatabase.vue'),
+    meta: { 
+      requiresAuth: true,
+      allowedRoles: ['admin']
+    },
+  },
 
   // OTHER
   {
