@@ -29,7 +29,7 @@
         transition="slide-y-transition"
       />
 
-      <router-link v-if="isLoggedIn && role === 'admin'" to="/stock">
+      <router-link v-if="isLoggedIn && role === 'admin'" :to="{ name: 'stock-overview' }">
         <v-btn small depressed>Stok</v-btn>
       </router-link>
 
