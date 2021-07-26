@@ -70,6 +70,8 @@
             </v-toolbar>
 
             <v-tabs-items v-model="tabs.backup_state">
+
+              <!-- Lokasi -->
               <v-tab-item>
                 <v-simple-table>
                   <thead>
@@ -81,16 +83,43 @@
                   <tbody>
                     <tr>
                       <td>Server</td>
-                      <td>21 September 2021</td>
+                      <td>
+                        {{ toLocaleDateTime(backup_info.time_createdbackup_latest_server) }}
+                      </td>
                     </tr>
                     <tr>
                       <td>Dropbox</td>
-                      <td>20 September 2021</td>
+                      <td>21 September 2021</td>
                     </tr>
                   </tbody>
                 </v-simple-table>
               </v-tab-item>
 
+              <!-- Sejarah -->
+              <v-tab-item>
+                <v-card>
+                  <v-card-text>
+                    Test
+                  </v-card-text>
+                </v-card>
+              </v-tab-item>
+
+              <!-- Aksi -->
+              <v-tab-item>
+                <v-card>
+                  <v-card-text>
+                    <v-row>
+                      <v-col class="col-12 col-sm-6 col-md-4">
+                        <v-btn
+                          color="cyan white--text"
+                        >Backup Sekarang</v-btn>
+                      </v-col>
+                    </v-row>
+                  </v-card-text>
+                </v-card>
+              </v-tab-item>
+
+              <!-- Pengaturan -->
               <v-tab-item>
                 <v-card>
                   <v-card-text>
@@ -219,14 +248,16 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
       menu_backup_time: null,
-
+      backup_info: {},
       tabs: {
         backup_state: null,
-        backup_items: [ "Waktu", "Pengaturan" ],
+        backup_items: [ "Lokasi", "Sejarah", "Aksi", "Pengaturan" ],
         restore_state: null,
         restore_items: [ "Automatis", "Manual" ],
       },
@@ -235,6 +266,25 @@ export default {
         backup_target: [],
       }
     };
+  },
+  methods: {
+    toLocaleDateTime(datetime_str) {
+      return new Date(datetime_str).toLocaleString('id-ID', {
+        dateStyle: "long",
+        timeStyle: "short"
+      }) 
+    },
+    getBackupInfo() {
+      axios.get("utils/backup/info")
+        .then((response) => {
+          this.backup_info = response.data.data;
+          this.form_backup.backup_time = this.backup_info.time_autobackup;
+          this.form_backup.backup_target = this.backup_info.location_backup;
+        })
+    }
+  },
+  created() {
+    this.getBackupInfo();
   }
 }
 </script>
