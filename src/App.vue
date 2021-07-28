@@ -6,15 +6,18 @@
         v-if="alert_visible"
         :type="alert_type"
         :text="alert_text"
+        @remove-alert="removeAlert"
       />
       <router-view
-        @trigger-alert="onTriggerAlert"
+        @trigger-alert="showAlert"
       />
     </v-main>
   </v-app>
 </template>
 
 <script>
+import axios from 'axios';
+
 import Alert from '@/components/Alert.vue';
 import Navbar from '@/components/Navbar.vue';
 
@@ -39,11 +42,31 @@ export default {
     }
   },
   methods: {
-    onTriggerAlert(type, text) {
+    showAlert(type, text) {
       this.alert_type = type;
       this.alert_text = text;
       this.alert_visible = true;
+    },
+    removeAlert() {
+      this.alert_visible = false;
+    },
+    checkBackendHealth() {
+      axios.get("utils/checkhealth/")
+        .catch((error) => {
+          this.alert_type = "error";
+          this.alert_text = "Server backend sedang tidak aktif. Fungsionalitas website ini akan terganggu.";
+          this.alert_visible = true;
+          console.log(error);
+        })
     }
+  },
+  mounted() {
+
+    // Check health when instantiated then every 30 seconds
+    this.checkBackendHealth();
+    setInterval(function() {
+      this.checkBackendHealth();
+    }.bind(this), 30000);
   }
 };
 </script>
