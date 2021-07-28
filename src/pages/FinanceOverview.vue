@@ -1,6 +1,5 @@
 <template>
-  <div class="pa-3">
-
+  <div>
     <v-row>
       <v-col class="col-12 col-sm-6 col-md-3">
         <v-card elevation="4">

@@ -1,5 +1,5 @@
 <template>
-  <div class="pa-3">
+  <div>
     <h2>List Suppliers</h2>
     <v-text-field class="mt-3" placeholder="Cari" v-model="search" prepend-icon="mdi-magnify"></v-text-field>
     <v-data-table

@@ -1,5 +1,5 @@
 <template>
-  <div class="pa-3">
+  <div>
     <h1 class="text-center">Input Supplier</h1>
     <v-container>
       <v-form 

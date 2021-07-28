@@ -1,5 +1,5 @@
 <template>
-  <div class="pa-3">
+  <div>
     <v-row>
       <!-- Incoming Detail -->
       <v-col class="col-12 col-md-6">

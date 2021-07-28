@@ -1,191 +1,188 @@
 <template>
-  <div class="pa-3">
-    <v-container>
-      <!-- Database -->
-      <v-row>
-        <v-col class="col-12">
-          <v-card>
-            <v-card-title>Database</v-card-title>
-            <v-card-text>
-              <v-row>
-                <v-col class="col-12 col-md-6">
-                  <v-simple-table>
-                    <thead>
-                      <tr>
-                        <th>Kategori</th>
-                        <th>Banyak</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Barang Masuk</td>
-                        <td>1</td>
-                      </tr>
-                      <tr>
-                        <td>Barang Keluar</td>
-                        <td>2</td>
-                      </tr>
-                      <tr>
-                        <td>Supplier</td>
-                        <td>3</td>
-                      </tr>
-                      <tr>
-                        <td>Pembeli</td>
-                        <td>4</td>
-                      </tr>
-                    </tbody>
-                  </v-simple-table>
-              </v-col>
-              </v-row>
-            </v-card-text>
-          </v-card>
-        </v-col>
-      </v-row>
+  <div>
+    <!-- Database -->
+    <v-row>
+      <v-col class="col-12">
+        <v-card>
+          <v-card-title>Database</v-card-title>
+          <v-card-text>
+            <v-row>
+              <v-col class="col-12 col-md-6">
+                <v-simple-table>
+                  <thead>
+                    <tr>
+                      <th>Kategori</th>
+                      <th>Banyak</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Barang Masuk</td>
+                      <td>1</td>
+                    </tr>
+                    <tr>
+                      <td>Barang Keluar</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>Supplier</td>
+                      <td>3</td>
+                    </tr>
+                    <tr>
+                      <td>Pembeli</td>
+                      <td>4</td>
+                    </tr>
+                  </tbody>
+                </v-simple-table>
+            </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
 
-      <!-- Backup and Restore -->
-      <v-row>
-        <v-col class="col-12">
-          <v-card>
-            <v-toolbar
-              color="cyan"
-              dark
-              flat
-            >
-              <v-toolbar-title>Backup And Restore</v-toolbar-title>
+    <!-- Backup and Restore -->
+    <v-row>
+      <v-col class="col-12">
+        <v-card>
+          <v-toolbar
+            color="cyan"
+            dark
+            flat
+          >
+            <v-toolbar-title>Backup And Restore</v-toolbar-title>
 
-              <template v-slot:extension>
-                <v-tabs
-                  v-model="tabs.backuprestore_state"
-                  align-with-title
+            <template v-slot:extension>
+              <v-tabs
+                v-model="tabs.backuprestore_state"
+                align-with-title
+              >
+                <v-tabs-slider color="yellow"></v-tabs-slider>
+
+                <v-tab
+                  v-for="item in tabs.backuprestore_items"
+                  :key="item"
                 >
-                  <v-tabs-slider color="yellow"></v-tabs-slider>
+                  {{ item }}
+                </v-tab>
+              </v-tabs>
+            </template>
+          </v-toolbar>
 
-                  <v-tab
-                    v-for="item in tabs.backuprestore_items"
-                    :key="item"
+          <v-tabs-items v-model="tabs.backuprestore_state">
+
+            <!-- Sejarah -->
+            <v-tab-item>
+              <v-card>
+                <v-card-text>
+                  <v-data-table
+                    :headers="backup_history.headers"
+                    :items="backup_history.data"
+                    :item-key="backup_history.data.name"
+                    :items-per-page="5"
+                    must-sort="true"
+                    sort-by="name"
                   >
-                    {{ item }}
-                  </v-tab>
-                </v-tabs>
-              </template>
-            </v-toolbar>
+                    <template v-slot:item.datetime="{ item }">
+                      {{ toLocaleDateTime(item.datetime) }}
+                    </template>
 
-            <v-tabs-items v-model="tabs.backuprestore_state">
+                  </v-data-table>
+                </v-card-text>
+              </v-card>
+            </v-tab-item>
 
-              <!-- Sejarah -->
-              <v-tab-item>
-                <v-card>
-                  <v-card-text>
-                    <v-data-table
-                      :headers="backup_history.headers"
-                      :items="backup_history.data"
-                      :item-key="backup_history.data.name"
-                      :items-per-page="5"
-                      must-sort="true"
-                      sort-by="name"
-                    >
-                      <template v-slot:item.datetime="{ item }">
-                        {{ toLocaleDateTime(item.datetime) }}
-                      </template>
+            <!-- Aksi -->
+            <v-tab-item>
+              <v-card>
+                <v-card-text>
+                  <v-row>
+                    <v-col class="col-12 col-sm-4 col-md-3">
+                      <v-btn
+                        color="cyan white--text"
+                      >
+                        Backup Sekarang
+                      </v-btn>
+                    </v-col>
+                    <v-col class="col-12 col-sm-4 col-md-3">
+                      <v-btn
+                        color="green white--text"
+                      >
+                        Restore Otomatis
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+              </v-card>
+            </v-tab-item>
 
-                    </v-data-table>
-                  </v-card-text>
-                </v-card>
-              </v-tab-item>
-
-              <!-- Aksi -->
-              <v-tab-item>
+            <!-- Pengaturan -->
+            <v-tab-item>
+              <v-form @submit.prevent="submitBackupConfig">
                 <v-card>
                   <v-card-text>
                     <v-row>
-                      <v-col class="col-12 col-sm-4 col-md-3">
-                        <v-btn
-                          color="cyan white--text"
+                      <!-- Auto Backup Time -->
+                      <v-col class="col-12 col-md-6">
+                        <v-menu
+                          ref="menu"
+                          v-model="menu_backup_time"
+                          :close-on-content-click="false"
+                          :nudge-right="40"
+                          :return-value.sync="time"
+                          transition="scale-transition"
+                          offset-y
+                          max-width="400px"
+                          max-height="400px"
                         >
-                          Backup Sekarang
-                        </v-btn>
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-text-field
+                              v-model="form_backup.autobackup_time"
+                              label="Waktu Backup Automatis"
+                              prepend-icon="mdi-clock-time-four-outline"
+                              readonly
+                              v-bind="attrs"
+                              v-on="on"
+                            ></v-text-field>
+                          </template>
+                          <v-time-picker
+                            v-if="menu_backup_time"
+                            v-model="form_backup.autobackup_time"
+                            full-width
+                            format="24hr"
+                            @click:minute="$refs.menu.save(form_backup.autobackup_time)"
+                          ></v-time-picker>
+                        </v-menu>
                       </v-col>
-                      <v-col class="col-12 col-sm-4 col-md-3">
-                        <v-btn
-                          color="green white--text"
+
+                      <!-- Auto Backup Location -->
+                      <v-col class="col-12 col-md-6">
+                        <v-text-field
+                          label="Lokasi Backup"
+                          v-model="form_backup.autobackup_location"
+                          prepend-icon="mdi-folder"
                         >
-                          Restore Otomatis
-                        </v-btn>
+                        </v-text-field>
                       </v-col>
                     </v-row>
+
                   </v-card-text>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn 
+                      color="primary"
+                      type="submit"
+                    >
+                      Simpan
+                    </v-btn>
+                  </v-card-actions>
                 </v-card>
-              </v-tab-item>
-
-              <!-- Pengaturan -->
-              <v-tab-item>
-                <v-form @submit.prevent="submitBackupConfig">
-                  <v-card>
-                    <v-card-text>
-                      <v-row>
-                        <!-- Auto Backup Time -->
-                        <v-col class="col-12 col-md-6">
-                          <v-menu
-                            ref="menu"
-                            v-model="menu_backup_time"
-                            :close-on-content-click="false"
-                            :nudge-right="40"
-                            :return-value.sync="time"
-                            transition="scale-transition"
-                            offset-y
-                            max-width="400px"
-                            max-height="400px"
-                          >
-                            <template v-slot:activator="{ on, attrs }">
-                              <v-text-field
-                                v-model="form_backup.autobackup_time"
-                                label="Waktu Backup Automatis"
-                                prepend-icon="mdi-clock-time-four-outline"
-                                readonly
-                                v-bind="attrs"
-                                v-on="on"
-                              ></v-text-field>
-                            </template>
-                            <v-time-picker
-                              v-if="menu_backup_time"
-                              v-model="form_backup.autobackup_time"
-                              full-width
-                              format="24hr"
-                              @click:minute="$refs.menu.save(form_backup.autobackup_time)"
-                            ></v-time-picker>
-                          </v-menu>
-                        </v-col>
-
-                        <!-- Auto Backup Location -->
-                        <v-col class="col-12 col-md-6">
-                          <v-text-field
-                            label="Lokasi Backup"
-                            v-model="form_backup.autobackup_location"
-                            prepend-icon="mdi-folder"
-                          >
-                          </v-text-field>
-                        </v-col>
-                      </v-row>
-
-                    </v-card-text>
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn 
-                        color="primary"
-                        type="submit"
-                      >
-                        Simpan
-                      </v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-form>
-              </v-tab-item>
-            </v-tabs-items>
-          </v-card>
-        </v-col>
-      </v-row>
-
-    </v-container>
+              </v-form>
+            </v-tab-item>
+          </v-tabs-items>
+        </v-card>
+      </v-col>
+    </v-row>
   </div>
 </template>
 

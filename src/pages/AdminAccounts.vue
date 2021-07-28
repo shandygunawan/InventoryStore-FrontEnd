@@ -1,5 +1,5 @@
 <template>
-  <div class="pa-3">
+  <div>
     <v-dialog
       v-model="dialogs.edit"
       max-width="500px"

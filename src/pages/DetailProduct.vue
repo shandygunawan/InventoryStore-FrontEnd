@@ -1,5 +1,5 @@
 <template>
-  <div class="pa-3">
+  <div>
     <v-row>
       <v-col class="col-12 col-md-5">
         <v-img 
