@@ -62,11 +62,11 @@ export default {
   },
   mounted() {
 
-    // Check health when instantiated then every 30 seconds
+    // Check health when instantiated then every minute
     this.checkBackendHealth();
     setInterval(function() {
       this.checkBackendHealth();
-    }.bind(this), 30000);
+    }.bind(this), 60000);
   }
 };
 </script>

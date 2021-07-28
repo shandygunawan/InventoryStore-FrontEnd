@@ -4,7 +4,14 @@
     <v-row>
       <v-col class="col-12">
         <v-card>
-          <v-card-title>Database</v-card-title>
+          <v-toolbar
+            color="blue"
+            dark
+            flat
+          >
+            <v-toolbar-title>Database</v-toolbar-title>
+          </v-toolbar>
+
           <v-card-text>
             <v-row>
               <v-col class="col-12 col-md-6">
@@ -18,23 +25,27 @@
                   <tbody>
                     <tr>
                       <td>Barang Masuk</td>
-                      <td>1</td>
+                      <td>{{ db_info.count.incoming }} ({{ formatBytes(db_info.size.incoming, 2) }})</td>
                     </tr>
                     <tr>
                       <td>Barang Keluar</td>
-                      <td>2</td>
+                      <td>{{ db_info.count.outgoing }} ({{ formatBytes(db_info.size.outgoing, 2) }})</td>
                     </tr>
                     <tr>
                       <td>Supplier</td>
-                      <td>3</td>
+                      <td>{{ db_info.count.supplier }} ({{ formatBytes(db_info.size.supplier, 2) }})</td>
                     </tr>
                     <tr>
                       <td>Pembeli</td>
-                      <td>4</td>
+                      <td>{{ db_info.count.buyer }} ({{ formatBytes(db_info.size.buyer, 2) }})</td>
+                    </tr>
+                    <tr>
+                      <td>Produk</td>
+                      <td>{{ db_info.count.product }} ({{ formatBytes(db_info.size.product, 2) }})</td>
                     </tr>
                   </tbody>
                 </v-simple-table>
-            </v-col>
+              </v-col>
             </v-row>
           </v-card-text>
         </v-card>
@@ -100,9 +111,28 @@
                     <v-col class="col-12 col-sm-4 col-md-3">
                       <v-btn
                         color="cyan white--text"
+                        @click="createBackup"
                       >
                         Backup Sekarang
                       </v-btn>
+                      <v-dialog
+                        v-model="dialogs.backup"
+                        hide-overlay
+                        persistent
+                        width="300"
+                      >
+                        <v-card color="primary" dark>
+                          <v-card-text>
+                            Proses Backup sedang berjalan...
+                            <v-progress-linear
+                              indeterminate
+                              color="white"
+                              class="mb-0"
+                            >
+                            </v-progress-linear>
+                          </v-card-text>
+                        </v-card>
+                      </v-dialog>
                     </v-col>
                     <v-col class="col-12 col-sm-4 col-md-3">
                       <v-btn
@@ -193,6 +223,10 @@ export default {
   data() {
     return {
       menu_backup_time: false,
+      dialogs: {
+        backup: false,
+      },
+      db_info: {},
       backup_info: {},
       backup_history: {
         data: [],
@@ -218,8 +252,25 @@ export default {
         timeStyle: "short"
       }) 
     },
+    formatBytes(bytes, decimals = 2) {
+        if (bytes === 0) return '0 Bytes';
+
+        const k = 1024;
+        const dm = decimals < 0 ? 0 : decimals;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+    },
+    getDbInfo() {
+      axios.get("utils/db/info/")
+        .then((response) => {
+          this.db_info = response.data.data;
+        })
+    },
     getBackupInfo() {
-      axios.get("utils/backup/info")
+      axios.get("utils/backup/info/")
         .then((response) => {
           this.backup_info = response.data.data;
           this.form_backup.autobackup_time = this.backup_info.autobackup_time;
@@ -230,6 +281,16 @@ export default {
       axios.get("utils/backup/list")
         .then((response) => {
           this.backup_history.data = response.data.data;
+        })
+    },
+    createBackup() {
+      this.dialogs.backup = true;
+      axios.post("utils/backup/create/", this.form_backup)
+        .then((response) => {
+          if (response.data.success === true) {
+            this.dialogs.backup = false;
+            this.$emit("trigger-alert", "success", "Backup berhasil!");
+          }
         })
     },
     submitBackupConfig() {
@@ -251,6 +312,7 @@ export default {
   created() {
     this.getBackupInfo();
     this.getBackupHistory();
+    this.getDbInfo();
   }
 }
 </script>
