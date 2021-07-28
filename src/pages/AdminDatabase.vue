@@ -83,7 +83,6 @@
                       :items-per-page="5"
                       must-sort="true"
                       sort-by="name"
-                      class="elevation-1"
                     >
                       <template v-slot:item.datetime="{ item }">
                         {{ toLocaleDateTime(item.datetime) }}
@@ -120,49 +119,66 @@
 
               <!-- Pengaturan -->
               <v-tab-item>
-                <v-card>
-                  <v-card-text>
-                    <!-- Auto Backup Time -->
-                    <v-row>
-                      <v-col class="col-12 col-md-6">
-                        <v-menu
-                          ref="menu"
-                          v-model="menu_backup_time"
-                          :close-on-content-click="false"
-                          :nudge-right="40"
-                          :return-value.sync="time"
-                          transition="scale-transition"
-                          offset-y
-                          max-width="400px"
-                          max-height="400px"
-                        >
-                          <template v-slot:activator="{ on, attrs }">
-                            <v-text-field
-                              v-model="form_backup.backup_time"
-                              label="Waktu Backup Automatis"
-                              prepend-icon="mdi-clock-time-four-outline"
-                              readonly
-                              v-bind="attrs"
-                              v-on="on"
-                            ></v-text-field>
-                          </template>
-                          <v-time-picker
-                            v-if="menu_backup_time"
-                            v-model="form_backup.backup_time"
-                            full-width
-                            @click:minute="$refs.menu.save(form_backup.backup_time)"
-                          ></v-time-picker>
-                        </v-menu>
-                      </v-col>
-                    </v-row>
-                  </v-card-text>
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="primary">
-                      Simpan
-                    </v-btn>
-                  </v-card-actions>
-                </v-card>
+                <v-form @submit.prevent="submitBackupConfig">
+                  <v-card>
+                    <v-card-text>
+                      <v-row>
+                        <!-- Auto Backup Time -->
+                        <v-col class="col-12 col-md-6">
+                          <v-menu
+                            ref="menu"
+                            v-model="menu_backup_time"
+                            :close-on-content-click="false"
+                            :nudge-right="40"
+                            :return-value.sync="time"
+                            transition="scale-transition"
+                            offset-y
+                            max-width="400px"
+                            max-height="400px"
+                          >
+                            <template v-slot:activator="{ on, attrs }">
+                              <v-text-field
+                                v-model="form_backup.autobackup_time"
+                                label="Waktu Backup Automatis"
+                                prepend-icon="mdi-clock-time-four-outline"
+                                readonly
+                                v-bind="attrs"
+                                v-on="on"
+                              ></v-text-field>
+                            </template>
+                            <v-time-picker
+                              v-if="menu_backup_time"
+                              v-model="form_backup.autobackup_time"
+                              full-width
+                              format="24hr"
+                              @click:minute="$refs.menu.save(form_backup.autobackup_time)"
+                            ></v-time-picker>
+                          </v-menu>
+                        </v-col>
+
+                        <!-- Auto Backup Location -->
+                        <v-col class="col-12 col-md-6">
+                          <v-text-field
+                            label="Lokasi Backup"
+                            v-model="form_backup.autobackup_location"
+                            prepend-icon="mdi-folder"
+                          >
+                          </v-text-field>
+                        </v-col>
+                      </v-row>
+
+                    </v-card-text>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn 
+                        color="primary"
+                        type="submit"
+                      >
+                        Simpan
+                      </v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-form>
               </v-tab-item>
             </v-tabs-items>
           </v-card>
@@ -179,7 +195,7 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      menu_backup_time: null,
+      menu_backup_time: false,
       backup_info: {},
       backup_history: {
         data: [],
@@ -193,8 +209,9 @@ export default {
         backuprestore_items: [ "Sejarah", "Aksi", "Pengaturan" ],
       },
       form_backup: {
-        backup_time: null,
-      }
+        autobackup_time: null,
+        autobackup_location: null,
+      },
     };
   },
   methods: {
@@ -208,14 +225,20 @@ export default {
       axios.get("utils/backup/info")
         .then((response) => {
           this.backup_info = response.data.data;
-          this.form_backup.backup_time = this.backup_info.time_autobackup;
+          this.form_backup.autobackup_time = this.backup_info.autobackup_time;
+          this.form_backup.autobackup_location = this.backup_info.autobackup_location;
         })
     },
     getBackupHistory() {
       axios.get("utils/backup/list")
         .then((response) => {
-          console.log(response);
           this.backup_history.data = response.data.data;
+        })
+    },
+    submitBackupConfig() {
+      axios.post("utils/config/", this.form_backup)
+        .then(() => {
+          this.$router.go();
         })
     }
   },
