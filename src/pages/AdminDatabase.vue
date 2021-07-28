@@ -234,8 +234,17 @@ export default {
     },
     submitBackupConfig() {
       axios.post("utils/config/", this.form_backup)
-        .then(() => {
-          this.$router.go();
+        .then((response) => {
+          let changed_configs = response.data.data;
+          if (changed_configs.includes("autobackup_time") 
+              && changed_configs.includes("autobackup_location")) {
+            this.$emit('trigger-alert', "success", "Pengaturan Backup berhasil disimpan!");
+            this.backup_info.autobackup_time = this.form_backup.autobackup_time;
+            this.backup_info.autobackup_location = this.form_backup.autobackup_location;
+
+          } else {
+            this.$emit('trigger-alert', "error", "Pengaturan Backup gagal disimpan!");
+          }
         })
     }
   },
