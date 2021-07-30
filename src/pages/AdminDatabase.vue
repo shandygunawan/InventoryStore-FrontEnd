@@ -98,6 +98,13 @@
                       {{ toLocaleDateTime(item.datetime) }}
                     </template>
 
+                    <template v-slot:item.actions="{ item }">
+
+                      <v-icon @click="restoreBackupFromLocal(item)">
+                        mdi-database-refresh
+                      </v-icon>
+                    </template>
+
                   </v-data-table>
                 </v-card-text>
               </v-card>
@@ -274,7 +281,8 @@ export default {
         data: [],
         headers: [
           { text: "Nama Backup", value: "name", sortable: true },
-          { text: "Waktu Backup", value: "datetime", sortable: true }
+          { text: "Waktu Backup", value: "datetime", sortable: true },
+          { text: "Aksi", value: "actions", sortable: false }
         ]
       },
       tabs: {
@@ -336,6 +344,23 @@ export default {
           }
         })
     },
+    restoreBackupFromLocal(backup_file) {
+      this.dialogs.restore = true;
+
+      axios.post("utils/backup/restore/local/", { "backup_filename": backup_file.name })
+        .then((response) => {
+          if (response.data.success === true) {
+            this.dialogs.restore = false;
+            this.$emit("trigger-alert", "success", "Restore berhasil!");
+          } else {
+            this.dialogs.restore = false;
+            this.$emit("trigger-alert", "error", "Restore Gagal!");
+          }
+        })
+        .catch(() => {
+          this.dialogs.restore = false;
+        })
+    },
     restoreBackupFromUpload() {
       this.dialogs.restore = true;
       let form_data = new FormData();
@@ -350,7 +375,14 @@ export default {
           if (response.data.success === true) {
             this.dialogs.restore = false;
             this.$emit("trigger-alert", "success", "Restore berhasil!");
+          } else {
+            this.dialogs.restore = false;
+            this.$emit("trigger-alert", "error", "Restore Gagal!");  
           }
+        })
+        .catch(() => {
+          this.dialogs.restore = false;
+          this.$emit("trigger-alert", "error", "Restore Gagal!");
         })
     },
     submitBackupConfig() {
