@@ -108,7 +108,12 @@
               <v-card>
                 <v-card-text>
                   <v-row>
-                    <v-col class="col-12 col-sm-4 col-md-3">
+                    <v-col class="col-12">
+                      <h2>Backup</h2>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col class="col-12">
                       <v-btn
                         color="cyan white--text"
                         @click="createBackup"
@@ -134,13 +139,49 @@
                         </v-card>
                       </v-dialog>
                     </v-col>
-                    <v-col class="col-12 col-sm-4 col-md-3">
-                      <v-btn
-                        color="green white--text"
-                      >
-                        Restore Otomatis
-                      </v-btn>
+                  </v-row>
+                  <v-row>
+                    <v-col class="col-12"></v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col class="col-12">
+                      <h2>Restore</h2>
                     </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col class="grow">
+                      <v-file-input
+                        truncate-length="50"
+                        show-size
+                        label="Upload File Backup"
+                        v-model="restore_file"
+                      ></v-file-input>
+                    </v-col>
+                    <v-col class="shrink d-flex align-center">
+                      <v-btn
+                        color="cyan"
+                        text
+                        @click="restoreBackup"
+                      >Restore</v-btn>
+                    </v-col>
+                    <v-dialog
+                      v-model="dialogs.restore"
+                      hide-overlay
+                      persistent
+                      width="300"
+                    >
+                      <v-card color="primary" dark>
+                        <v-card-text>
+                          Proses Restore sedang berjalan...
+                          <v-progress-linear
+                            indeterminate
+                            color="white"
+                            class="mb-0"
+                          >
+                          </v-progress-linear>
+                        </v-card-text>
+                      </v-card>
+                    </v-dialog>
                   </v-row>
                 </v-card-text>
               </v-card>
@@ -225,6 +266,7 @@ export default {
       menu_backup_time: false,
       dialogs: {
         backup: false,
+        restore: false,
       },
       db_info: {},
       backup_info: {},
@@ -243,6 +285,7 @@ export default {
         autobackup_time: null,
         autobackup_location: null,
       },
+      restore_file: null,
     };
   },
   methods: {
@@ -290,6 +333,23 @@ export default {
           if (response.data.success === true) {
             this.dialogs.backup = false;
             this.$emit("trigger-alert", "success", "Backup berhasil!");
+          }
+        })
+    },
+    restoreBackup() {
+      this.dialogs.restore = true;
+      let form_data = new FormData();
+
+      // files
+      form_data.append("file", this.restore_file);
+
+      axios.post("utils/backup/restore/upload/", form_data, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      })
+        .then((response) => { 
+          if (response.data.success === true) {
+            this.dialogs.restore = false;
+            this.$emit("trigger-alert", "success", "Restore berhasil!");
           }
         })
     },
