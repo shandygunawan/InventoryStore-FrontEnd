@@ -161,7 +161,7 @@
                       <v-btn
                         color="cyan"
                         text
-                        @click="restoreBackup"
+                        @click="restoreBackupFromUpload"
                       >Restore</v-btn>
                     </v-col>
                     <v-dialog
@@ -336,7 +336,7 @@ export default {
           }
         })
     },
-    restoreBackup() {
+    restoreBackupFromUpload() {
       this.dialogs.restore = true;
       let form_data = new FormData();
 
