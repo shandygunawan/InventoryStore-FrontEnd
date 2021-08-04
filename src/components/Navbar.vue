@@ -3,6 +3,9 @@
       app
       permanent
       expand-on-hover
+      dark
+      class="primary"
+      v-if="isLoggedIn"
     >
       <v-list>
         <v-list-item class="px-2">
@@ -14,9 +17,9 @@
         <v-list-item link>
           <v-list-item-content>
             <v-list-item-title class="text-h6">
-              Sandra Adams
+              {{ username }}
             </v-list-item-title>
-            <v-list-item-subtitle>sandra_a88@gmail.com</v-list-item-subtitle>
+            <v-list-item-subtitle>{{ role }}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -25,44 +28,47 @@
 
       <v-list nav>
         <div v-for="(link, i) in links" :key="i">
-          <v-list-item
-            v-if="!link.sublinks"
-            :to="link.to"
-            :active-class="color"
-            avatar
-            class="v-list-item"
-          >
-            <v-list-item-icon>
-              <v-icon>{{ link.icon }}</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>{{ link.text }}</v-list-item-title>
-          </v-list-item>
-
-          <v-list-group
-            v-else
-            :key="link.text"
-            no-action
-            :prepend-icon="link.icon"
-            :value="false"
-          >
-            <template v-slot:activator>
-              <v-list-item-title>{{ link.text }}</v-list-item-title>
-            </template>
-
+          <div v-if="link.roles.includes(role)">
             <v-list-item
-              v-for="sublink in link.sublinks"
-              :to="sublink.to"
-              :key="sublink.text"
+              v-if="!link.sublinks"
+              :to="link.to"
+              :active-class="color"
+              avatar
+              class="v-list-item"
             >
-              <v-list-item-title>{{ sublink.text }}</v-list-item-title>
+              <v-list-item-icon>
+                <v-icon>{{ link.icon }}</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>{{ link.text }}</v-list-item-title>
             </v-list-item>
-          </v-list-group>
+
+            <v-list-group
+              v-else
+              :key="link.text"
+              no-action
+              color="white"
+              :prepend-icon="link.icon"
+              :value="false"
+            >
+              <template v-slot:activator>
+                <v-list-item-title>{{ link.text }}</v-list-item-title>
+              </template>
+
+              <v-list-item
+                v-for="sublink in link.sublinks"
+                :to="sublink.to"
+                :key="sublink.text"
+              >
+                <v-list-item-title>{{ sublink.text }}</v-list-item-title>
+              </v-list-item>
+            </v-list-group>
+          </div>
         </div>
       </v-list>
 
       <template v-slot:append>
         <div class="pa-2">
-          <v-btn block color="primary">
+          <v-btn block color="error" @click="logout">
             Keluar
           </v-btn>
         </div>
@@ -83,6 +89,7 @@ export default {
         {
           icon: "mdi-format-list-bulleted",
           text: "List",
+          roles: ["admin", "look"],
           sublinks: [
             { text: "Barang Masuk", to: { name: "list-incomings" } },
             { text: "Barang Keluar", to: { name: "list-outgoings"} },
@@ -94,6 +101,7 @@ export default {
         {
           icon: "mdi-import",
           text: "Input",
+          roles: ["admin", "input"],
           sublinks: [
             { text: "Barang Masuk", to: { name: "input-incoming" } },
             { text: "Barang Keluar", to: { name: "input-outgoing"} },
@@ -105,6 +113,7 @@ export default {
         {
           icon: "mdi-cash-multiple",
           text: "Finance",
+          roles: ["admin"],
           sublinks: [
             { text: "Overview", to: { name: "finance-overview" } },
             { text: "Hutang", to: { name: "finance-debt"} },
@@ -113,11 +122,13 @@ export default {
         {
           icon: "mdi-archive",
           text: "Stock",
+          roles: ["admin"],
           to: { name: "stock-overview" }
         },
         {
           icon: "mdi-cog",
           text: "Admin",
+          roles: ["admin"],
           sublinks: [
             { text: "Akun", to: { name: "admin-accounts" } },
             { text: "Database", to: { name: "admin-database" } },
@@ -129,6 +140,9 @@ export default {
   computed: {
     isLoggedIn() {
       return this.$store.getters.isAuthenticated;
+    },
+    username() {
+      return this.$store.getters.user.username;
     },
     role() {
       try {
