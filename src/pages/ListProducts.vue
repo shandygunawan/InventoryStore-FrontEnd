@@ -10,7 +10,6 @@
       :search="search"
       must-sort="true"
       sort-by="name"
-      class="elevation-1"
     >
       <template v-slot:item="props">
         <tr>
