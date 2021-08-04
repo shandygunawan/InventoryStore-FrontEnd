@@ -35,6 +35,7 @@
             <v-list-item-icon>
               <v-icon>{{ link.icon }}</v-icon>
             </v-list-item-icon>
+            <v-list-item-title>{{ link.text }}</v-list-item-title>
           </v-list-item>
 
           <v-list-group
@@ -58,67 +59,17 @@
           </v-list-group>
         </div>
       </v-list>
+
+      <template v-slot:append>
+        <div class="pa-2">
+          <v-btn block color="primary">
+            Keluar
+          </v-btn>
+        </div>
+      </template>
+
     </v-navigation-drawer>
 
-  <!-- <nav>
-    <v-app-bar app>
-      <v-toolbar-title>
-        <span class="font-weight-light">Inventory</span>
-        <span>Store</span>
-      </v-toolbar-title>
-      
-      <div class="ml-5"></div>
-
-      <navbar-dropdown
-        v-if="isLoggedIn && (role === 'admin' || role === 'look')"
-        list_name="List"
-        :list_items="list_items"
-        transition="slide-y-transition"
-      />
-
-      <navbar-dropdown
-        v-if="isLoggedIn && (role === 'admin' || role === 'input') "
-        list_name="Input"
-        :list_items="input_items"
-        transition="slide-x-transition"
-      />
-
-      <navbar-dropdown
-        v-if="isLoggedIn && role === 'admin'"
-        list_name="Keuangan"
-        :list_items="finance_items"
-        transition="slide-y-transition"
-      />
-
-      <router-link v-if="isLoggedIn && role === 'admin'" :to="{ name: 'stock-overview' }">
-        <v-btn small depressed>Stok</v-btn>
-      </router-link>
-
-      <navbar-dropdown
-        v-if="isLoggedIn && role === 'admin'"
-        list_name="Admin"
-        :list_items="admin_items"
-        transition="slide-x-transition"
-      />
-
-      <v-spacer></v-spacer>
-
-      <div v-if="!isLoggedIn">
-        <router-link to="/login">
-          <v-btn text>
-            <span>Masuk</span>
-            <v-icon right>mdi-login</v-icon>
-          </v-btn>
-        </router-link>
-      </div>
-      <div v-else>
-        <v-btn text @click="logout">
-          <span>Keluar</span>
-          <v-icon right>mdi-logout</v-icon>
-        </v-btn>
-      </div>
-    </v-app-bar>
-  </nav> -->
 </template>
 
 <script>
@@ -158,6 +109,11 @@ export default {
             { text: "Overview", to: { name: "finance-overview" } },
             { text: "Hutang", to: { name: "finance-debt"} },
           ],
+        },
+        {
+          icon: "mdi-archive",
+          text: "Stock",
+          to: { name: "stock-overview" }
         },
         {
           icon: "mdi-cog",
