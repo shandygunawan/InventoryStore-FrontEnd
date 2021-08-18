@@ -200,39 +200,6 @@
                 <v-card>
                   <v-card-text>
                     <v-row>
-                      <!-- Auto Backup Time -->
-                      <v-col class="col-12 col-md-6">
-                        <v-menu
-                          ref="menu"
-                          v-model="menu_backup_time"
-                          :close-on-content-click="false"
-                          :nudge-right="40"
-                          :return-value.sync="time"
-                          transition="scale-transition"
-                          offset-y
-                          max-width="400px"
-                          max-height="400px"
-                        >
-                          <template v-slot:activator="{ on, attrs }">
-                            <v-text-field
-                              v-model="form_backup.autobackup_time"
-                              label="Waktu Backup Automatis"
-                              prepend-icon="mdi-clock-time-four-outline"
-                              readonly
-                              v-bind="attrs"
-                              v-on="on"
-                            ></v-text-field>
-                          </template>
-                          <v-time-picker
-                            v-if="menu_backup_time"
-                            v-model="form_backup.autobackup_time"
-                            full-width
-                            format="24hr"
-                            @click:minute="$refs.menu.save(form_backup.autobackup_time)"
-                          ></v-time-picker>
-                        </v-menu>
-                      </v-col>
-
                       <!-- Auto Backup Location -->
                       <v-col class="col-12 col-md-6">
                         <v-text-field
@@ -290,7 +257,6 @@ export default {
         backuprestore_items: [ "Sejarah", "Aksi", "Pengaturan" ],
       },
       form_backup: {
-        autobackup_time: null,
         autobackup_location: null,
       },
       restore_file: null,
@@ -324,7 +290,6 @@ export default {
       axios.get("utils/backup/info/")
         .then((response) => {
           this.backup_info = response.data.data;
-          this.form_backup.autobackup_time = this.backup_info.autobackup_time;
           this.form_backup.autobackup_location = this.backup_info.autobackup_location;
         })
     },
