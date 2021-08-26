@@ -203,7 +203,7 @@
                       <!-- Auto Backup Location -->
                       <v-col class="col-12 col-md-6">
                         <v-text-field
-                          label="Lokasi Backup"
+                          label="Direktori Backup Dropbox"
                           v-model="form_backup.autobackup_location"
                           prepend-icon="mdi-folder"
                         >
@@ -254,7 +254,7 @@ export default {
       },
       tabs: {
         backuprestore_state: null,
-        backuprestore_items: [ "Sejarah", "Aksi", "Pengaturan" ],
+        backuprestore_items: [ "Sejarah Lokal", "Aksi", "Pengaturan" ],
       },
       form_backup: {
         autobackup_location: null,
