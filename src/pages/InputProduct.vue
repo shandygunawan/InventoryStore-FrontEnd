@@ -45,6 +45,19 @@
             ></v-text-field>
           </v-col>
         </v-row>
+
+        <!-- Image File Input -->
+        <v-file-input
+          show-size
+          accept="image/*"
+          label="Gambar Produk"
+          prepend-icon="mdi-image-outline"
+          v-model="form.image"
+          @change="previewImage"
+        ></v-file-input>
+        <v-img :src="url_image"></v-img>
+
+        <!-- Submit Button -->
         <div class="d-flex justify-center mt-15">
           <v-btn color="blue white--text" class="justify-center" type="submit">
             Input Produk
@@ -77,10 +90,12 @@ export default {
   data() {
     return {
       isFormValid: false,
+      url_image: null,
       form: {
         name: null,
         stock: null,
-        price: null
+        price: null,
+        image: null,
       },
       rules: {
         name: [
@@ -98,14 +113,23 @@ export default {
     };
   },
   methods: {
+    previewImage() {
+      this.url_image = URL.createObjectURL(this.form.image);
+    },
     submitForm() {
       if(this.isFormValid == false) {
         return;
       }
 
-      axios.post("products/", this.form, {
+      let form_data = new FormData();
+      form_data.append('name', this.form.name);
+      form_data.append('stock', this.form.stock);
+      form_data.append('price', this.form.price);
+      form_data.append('image', this.form.image);
+      
+      axios.post("products/", form_data, {
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'multipart/form-data',
         }
       })
         .then(res => {
@@ -113,6 +137,7 @@ export default {
           this.snackbar_text = "Input berhasil!"
           this.snackbar = true;
           this.$refs.form.reset();
+          this.url_image = null;
         })
     }
   }

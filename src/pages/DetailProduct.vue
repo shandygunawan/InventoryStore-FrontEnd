@@ -74,6 +74,15 @@
                         ></v-text-field>
                       </v-col>
                     </v-row>
+                    <v-row>
+                      <v-file-input
+                        show-size
+                        accept="image/*"
+                        label="Gambar Produk Baru"
+                        prepend-icon="mdi-image-outline"
+                        v-model="form.image"
+                      ></v-file-input>
+                    </v-row>
                   </v-card-text>
                   <v-card-actions>
                     <v-btn 
@@ -145,7 +154,10 @@
                 :key="history.price"
               >
                 <td>{{ history.price | currency_idr }}</td>
-                <td>{{ new Date(history.date_created) }}</td>
+                <td>{{ new Date(history.created_at).toLocaleString('id-ID', {
+                  dateStyle: "long",
+                  timeStyle: "short"
+                  }) }}</td>
               </tr>
             </tbody>
           </template>
@@ -170,7 +182,8 @@ export default {
       form: {
         name: null,
         price: null,
-        stock: null
+        stock: null,
+        image: null
       },
       rules: {
         name: [
@@ -190,7 +203,8 @@ export default {
       var url = 'products/' + this.$route.params.product_id
       axios.get(url)
         .then((response) => {
-          this.product = response.data;
+          console.log(response);
+          this.product = response.data.data;
           this.form.name = this.product.product.name;
           this.form.price = this.product.product.price;
           this.form.stock = this.product.product.stock;
@@ -202,7 +216,18 @@ export default {
       }
 
       var url = 'products/' + this.$route.params.product_id + "/";
-      axios.put(url, this.form)
+
+      let form_data = new FormData();
+      form_data.append('name', this.form.name);
+      form_data.append('stock', this.form.stock);
+      form_data.append('price', this.form.price);
+      form_data.append('image', this.form.image);
+
+      axios.put(url, form_data, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        }
+      })
         .then((response) => {
           if (response.data.success === true) {
             this.$router.go();
