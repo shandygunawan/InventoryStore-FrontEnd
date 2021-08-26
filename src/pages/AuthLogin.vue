@@ -87,7 +87,11 @@ export default {
 
       this.isLoading = false;
 
-      this.$router.replace('/products');
+      if(this.$store.getters.user.role === "input") {
+        this.$router.replace('/input/incoming');
+      } else {
+        this.$router.replace('/products');
+      }
     }
   }
 }

@@ -203,7 +203,6 @@ export default {
       var url = 'products/' + this.$route.params.product_id
       axios.get(url)
         .then((response) => {
-          console.log(response);
           this.product = response.data.data;
           this.form.name = this.product.product.name;
           this.form.price = this.product.product.price;
